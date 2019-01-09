@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Rememberall
 {
-    class Calendar
+    public class Calendar
     {
 
 
