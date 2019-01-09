@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Rememberall.Domains;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -146,8 +147,19 @@ namespace Rememberall
         private void ShowUserCalendar()
         {
             //GetUserCalendar(); //Printar ut calendern samt visar dagar som användaren har aktiviter på(?)
+            PrintUserCalender(); //Printar kalendern veckovis eller månadsvis, markerar dagens datum
+            ShowUserActivity();
         }
 
+        private void ShowUserActivity()
+        {
+            List<Activities> list = _dataAccess.GetUserActivities(Users.CurrentUserId);
+
+            foreach (Activities item in list)
+            {
+                Console.WriteLine(item.Activityname + "     " + item.Date);
+            }
+        }
 
         public string GetHiddenPass()
         {

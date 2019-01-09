@@ -6,6 +6,8 @@ namespace Rememberall.Domains
 {
     public class Users
     {
+        public static int? CurrentUserId { get; set; }
+
         public int Id { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
