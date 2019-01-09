@@ -10,6 +10,7 @@ namespace Rememberall
 {
     class Engine
     {
+     
         public static System.Drawing.Point Position { get; set; }
         DataAccess _dataAccess = new DataAccess();
         internal void Run()
