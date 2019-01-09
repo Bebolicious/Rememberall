@@ -39,7 +39,7 @@ namespace Rememberall
             else
             {
                 Console.Clear();
-                LoginScreen();
+                
             }
         }
 
@@ -48,7 +48,9 @@ namespace Rememberall
         {
             Header("Log In");
             Write("Enter Username:");
+
             string input1 = Console.ReadLine();
+            Write("Enter Password:");
             string input2 = Console.ReadLine();
             bool Username = DataAccess.MatchUsername(input1, input2);
 
