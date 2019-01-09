@@ -29,9 +29,9 @@ namespace Rememberall
             }
         }
 
- public static bool MatchUsername(string Inputtedusername, string Inputtedpass)
+        public static bool MatchUsername(string Inputtedusername, string Inputtedpass)
         {
-            
+
             var sql = @"
                          Select Username, Password
                          FROM Users
@@ -49,10 +49,10 @@ namespace Rememberall
 
 
                 var Credentials = new Users();
-                
+
                 while (reader.Read())
                 {
-                    
+
                     string Username = reader.GetSqlString(0).Value;
                     string Password = reader.GetSqlString(1).Value;
 
@@ -61,17 +61,18 @@ namespace Rememberall
                         Credentials.Username = Username;
                         Credentials.Password = Password;
                         return true;
-                        
 
-                    }                
+
+                    }
 
                 }
                 return false;
 
-            }    }
+            }
+        }
 
 
-       internal List<Activities> GetUserActivities(int? currentUserId)
+        internal List<Activities> GetUserActivities(int? currentUserId)
         {
             var sql = @"Select Activityname, Date from Acitivities
                         Join ManyActivities on Activities.Id = ManyActivities.AcitivityId
@@ -99,4 +100,7 @@ namespace Rememberall
                 }
 
                 return list;
+            }
+        }
+    }
 }

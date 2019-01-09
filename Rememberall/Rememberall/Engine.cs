@@ -147,7 +147,7 @@ namespace Rememberall
         private void ShowUserCalendar()
         {
             //GetUserCalendar(); //Printar ut calendern samt visar dagar som användaren har aktiviter på(?)
-            PrintUserCalender(); //Printar kalendern veckovis eller månadsvis, markerar dagens datum
+            //PrintUserCalender(); //Printar kalendern veckovis eller månadsvis, markerar dagens datum
             ShowUserActivity();
         }
 
