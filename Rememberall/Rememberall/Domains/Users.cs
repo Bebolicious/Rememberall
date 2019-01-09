@@ -6,9 +6,10 @@ namespace Rememberall.Domains
 {
     class Users
     {
-
-        public int MyProperty { get; set; }
-        public int MyProperty2 { get; set; }
-        public int MyProperty3 { get; set; }
+        public int Id { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
+        public string Firstname { get; set; }
+        public string Lastname { get; set; }
     }
 }
