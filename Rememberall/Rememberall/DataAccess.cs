@@ -18,7 +18,7 @@ namespace Rememberall
                         INSERT INTO Users (Username, Password)
                         VALUES (@Username, @Password)";
 
-            
+
             using (SqlConnection connection = new SqlConnection(conString))
             using (SqlCommand command = new SqlCommand(sql, connection))
             {
@@ -28,6 +28,50 @@ namespace Rememberall
                 command.ExecuteNonQuery();
             }
         }
+
+        public static bool MatchUsername(string Inputtedusername, string Inputtedpass)
+        {
+            
+            var sql = @"
+                         Select Username, Password
+                         FROM Users
+                    WHERE Username=@Username AND password=@Password";
+
+
+            using (SqlConnection connection = new SqlConnection(conString))
+            using (SqlCommand command = new SqlCommand(sql, connection))
+            {
+                connection.Open();
+                command.Parameters.Add(new SqlParameter("Username", Inputtedusername));
+                command.Parameters.Add(new SqlParameter("Password", Inputtedpass));
+                command.ExecuteNonQuery();
+                SqlDataReader reader = command.ExecuteReader();
+
+
+                var Credentials = new Users();
+                
+                while (reader.Read())
+                {
+                    
+                    string Username = reader.GetSqlString(0).Value;
+                    string Password = reader.GetSqlString(1).Value;
+
+                    if (Username == Inputtedusername && Password == Inputtedpass)
+                    {
+                        Credentials.Username = Username;
+                        Credentials.Password = Password;
+                        return true;
+                        
+
+                    }                
+
+                }
+                return false;
+
+            }
+
+        }
+
 
     }
 }
