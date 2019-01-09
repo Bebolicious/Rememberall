@@ -6,8 +6,8 @@ namespace Rememberall.Domains
 {
     public class Activities
     {
-        public int MyProperty { get; set; }
-        public int MyProperty2 { get; set; }
-        public int MyProperty3 { get; set; }
+        public int Id { get; set; }
+        public string Activityname { get; set; }
+        public DateTime Date { get; set; }
     }
 }
