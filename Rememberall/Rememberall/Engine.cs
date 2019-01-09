@@ -49,7 +49,21 @@ namespace Rememberall
         {
             Header("Log In");
             Write("Enter Username:");
-            string Username = Console.ReadLine();
+            string input1 = Console.ReadLine();
+            string input2 = Console.ReadLine();
+            bool Username = DataAccess.MatchUsername(input1, input2);
+
+            if (Username==true)
+            {
+                MainMenu();
+            }
+            else
+            {
+                Writeline("Wrong Username or Password, try again.");
+                Console.ReadKey();
+                Login();
+            }
+
 
         }
 
@@ -71,7 +85,7 @@ namespace Rememberall
 
         private void MainMenu()
         { 
-      Header("Welcome User");
+      Header("Welcome ");
 
             Console.WriteLine("What do you want to do?");
             Writeline("A) Show my calendar");
