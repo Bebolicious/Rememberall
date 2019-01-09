@@ -1,22 +1,25 @@
 ﻿using Rememberall.Domains;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
-
+using System.Threading;
 
 namespace Rememberall
 {
     class Engine
     {
+        public static System.Drawing.Point Position { get; set; }
         DataAccess _dataAccess = new DataAccess();
         internal void Run()
-        {   // Kan vara bra för att skriva ut veckodagar
-            //string s = "Hello|World";
-            //Console.SetCursorPosition((Console.WindowWidth - s.Length) / 2, Console.CursorTop);
-            //Console.WriteLine(s);
+        {   // kan vara bra för att skriva ut veckodagar
+            //string s = "hello|world";
+            //Console.Setcursorposition((Console.windowwidth - s.length) / 2, console.cursortop);
+            //Console.Writeline(s);
 
             LoginScreen();
-            MainMenu();
+            //MainMenu();
         }
 
         private void LoginScreen()
@@ -40,7 +43,7 @@ namespace Rememberall
             else
             {
                 Console.Clear();
-                LoginScreen();
+                
             }
         }
 
@@ -49,9 +52,15 @@ namespace Rememberall
         {
             Header("Log In");
             Write("Enter Username:");
-            string input1 = Console.ReadLine();
-            string input2 = Console.ReadLine();
-            bool Username = DataAccess.MatchUsername(input1, input2);
+
+            string username = Console.ReadLine();
+            Write("Enter Password:");
+            string pass = SetHiddenPass();
+
+            string Hashpass = Hash(pass);
+
+
+            bool Username = DataAccess.MatchUsername(username, Hashpass);
 
             if (Username==true)
             {
@@ -70,17 +79,40 @@ namespace Rememberall
 
         private void CreateAccount()
         {
-            Header("Create new account");
-            Write("Please choose a username:");
-            string Newuser = Console.ReadLine();
-            Console.Clear();
-            Header("Create new account");
-            Write("Please choose a password:");
-            string Newpassword = GetHiddenPass();
 
-            _dataAccess.CreateNewUser(Newuser, Newpassword);
+            try
+            {
 
+                Header("Create new account");
+                Write("Please choose a username:");
+                string Newuser = Console.ReadLine();
+                Console.Clear();
+                Header("Create new account");
+                Write("Please choose a password:");
+                string input = SetHiddenPass();
+
+                string Newpassword = Hash(input);
+
+                _dataAccess.CreateNewUser(Newuser, Newpassword);
+
+                Writeline("User has been created");
         }
+
+            catch (System.Data.SqlClient.SqlException)
+            {
+               
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Username is taken");
+                Console.ForegroundColor = ConsoleColor.White;
+                Thread.Sleep(2000);
+        CreateAccount();
+
+
+    }
+}
+
+
+
 
 
         private void MainMenu()
@@ -165,7 +197,7 @@ namespace Rememberall
             }
         }
 
-        public string GetHiddenPass()
+        public string SetHiddenPass()
         {
             StringBuilder input = new StringBuilder();
             while (true)
@@ -177,7 +209,11 @@ namespace Rememberall
             }
             return input.ToString();
         }
-
+        static string Hash(string input)
+        {
+            var hash = (new SHA1Managed()).ComputeHash(Encoding.UTF8.GetBytes(input));
+            return string.Join("", hash.Select(b => b.ToString("x2")).ToArray());
+        }
 
         public void Header(string v)
         {
