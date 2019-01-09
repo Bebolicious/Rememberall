@@ -6,7 +6,14 @@ namespace Rememberall
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+
+            var engine = new Engine();
+            engine.Run();
+
+            
+
+
+
         }
     }
 }
