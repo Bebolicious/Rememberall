@@ -109,7 +109,8 @@ namespace Rememberall
             string newActivity = Console.ReadLine();
 
             Console.WriteLine("Add a date for the activity");
-            DateTime newDateTime = Console.ReadLine();
+            DateTime newDateTime = DateTime.Parse(Console.ReadLine());
+            return null;
         }
     }
 }

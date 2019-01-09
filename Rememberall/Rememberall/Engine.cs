@@ -19,7 +19,7 @@ namespace Rememberall
             //Console.Writeline(s);
 
             LoginScreen();
-            //MainMenu();
+            MainMenu();
         }
 
         private void LoginScreen()
