@@ -69,6 +69,7 @@ namespace Rememberall
 
 
         private void MainMenu()
+        { 
       Header("Welcome User");
 
             Console.WriteLine("What do you want to do?");
@@ -111,11 +112,10 @@ namespace Rememberall
             Writeline("B) Edit activity");
 
             ConsoleKey command = Console.ReadKey(true).Key;
-            if (command == ConsoleKey.A) ;
-            {
-                AddUserActivity(); DataAccess
+            if (command == ConsoleKey.A)
+              // AddUserActivity(); DataAccess
 
-            }
+            
             if (command == ConsoleKey.B)
             {
                 Console.WriteLine("Which activity do you want do edit? Choose from above");
@@ -129,11 +129,11 @@ namespace Rememberall
 
         private void ShowUserCalendar()
         {
-            GetUserCalendar(); //Printar ut calendern samt visar dagar som användaren har aktiviter på(?)
-        }        {
-          
+            //GetUserCalendar(); //Printar ut calendern samt visar dagar som användaren har aktiviter på(?)
         }
-        private void Header(string v)
+
+
+        public string GetHiddenPass()
         {
             StringBuilder input = new StringBuilder();
             while (true)
@@ -145,6 +145,8 @@ namespace Rememberall
             }
             return input.ToString();
         }
+
+
         public void Header(string v)
         {
             Console.Clear();
