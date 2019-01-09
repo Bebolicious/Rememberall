@@ -29,9 +29,9 @@ namespace Rememberall
             }
         }
 
- public static bool MatchUsername(string Inputtedusername, string Inputtedpass)
+        public static bool MatchUsername(string Inputtedusername, string Inputtedpass)
         {
-            
+
             var sql = @"
                          Select Username, Password
                          FROM Users
@@ -49,10 +49,10 @@ namespace Rememberall
 
 
                 var Credentials = new Users();
-                
+
                 while (reader.Read())
                 {
-                    
+
                     string Username = reader.GetSqlString(0).Value;
                     string Password = reader.GetSqlString(1).Value;
 
@@ -61,22 +61,23 @@ namespace Rememberall
                         Credentials.Username = Username;
                         Credentials.Password = Password;
                         return true;
-                        
 
-                    }                
+
+                    }
 
                 }
                 return false;
 
-            }    }
+            }
+        }
 
 
-       internal List<Activities> GetUserActivities(int? currentUserId)
+        internal List<Activities> GetUserActivities(int? currentUserId)
         {
-            var sql = @"Select Activityname, Date from Acitivities
-                        Join ManyActivities on Activities.Id = ManyActivities.AcitivityId
+            var sql = @"Select Activityname, Date from Activities
+                        Join ManyActivities on Activities.Id = ManyActivities.ActivityId
                         join Users on ManyActivities.UserId = Users.Id
-                         Where Id = @Id";
+                         Where UserId = @Id";
 
             using (SqlConnection connection = new SqlConnection(conString))
             using (SqlCommand command = new SqlCommand(sql, connection))
@@ -99,4 +100,16 @@ namespace Rememberall
                 }
 
                 return list;
+            }
+        }
+
+        internal Activities AddUserActivity(int? currentUserId)
+        {
+            Console.WriteLine("Name your activity");
+            string newActivity = Console.ReadLine();
+
+            Console.WriteLine("Add a date for the activity");
+            DateTime newDateTime = Console.ReadLine();
+        }
+    }
 }

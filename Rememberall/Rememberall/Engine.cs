@@ -119,8 +119,10 @@ namespace Rememberall
             Header("Usernames Activities");
 
             Console.WriteLine("You have the following activities:");
-            //ShowUserActivites(); // till dataaccess
+            Console.WriteLine();
             //GetUserActivities(); // till dataaccess
+            ShowUserActivity();
+
 
             Writeline("What do you want to do?");
                 Writeline("A) Add activity");
@@ -128,7 +130,11 @@ namespace Rememberall
 
             ConsoleKey command = Console.ReadKey(true).Key;
             if (command == ConsoleKey.A)
-              // AddUserActivity(); DataAccess
+            {
+                Activities acktivity = _dataAccess.AddUserActivity(Users.CurrentUserId);
+            }
+
+              
 
             
             if (command == ConsoleKey.B)
@@ -145,7 +151,7 @@ namespace Rememberall
         private void ShowUserCalendar()
         {
             //GetUserCalendar(); //Printar ut calendern samt visar dagar som användaren har aktiviter på(?)
-            PrintUserCalender(); //Printar kalendern veckovis eller månadsvis, markerar dagens datum
+            //PrintUserCalender(); //Printar kalendern veckovis eller månadsvis, markerar dagens datum
             ShowUserActivity();
         }
 
