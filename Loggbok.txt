@@ -1,0 +1,3 @@
+Onsdag förmiddag:
+Skissat fram idéer på vad vi vill ha med i bloggen, se följande länk: https://github.com/Bebolicious/Rememberall
+Suttit tillsammans och modellerat databasen, skapat github och pushat upp allt. Alex jobbar på login-menu och Oscar på Main-menu.

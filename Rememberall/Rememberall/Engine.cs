@@ -7,7 +7,11 @@ namespace Rememberall
     class Engine
     {
         internal void Run()
-        {
+        {   // Kan vara bra för att skriva ut veckodagar
+            //string s = "Hello|World";
+            //Console.SetCursorPosition((Console.WindowWidth - s.Length) / 2, Console.CursorTop);
+            //Console.WriteLine(s);
+
             LoginScreen();
             MainMenu();
         }
@@ -45,8 +49,69 @@ namespace Rememberall
 
         private void MainMenu()
         {
-          
+            Header("Welcome User");
+
+            Console.WriteLine("What do you want to do?");
+            Writeline("A) Show my calendar");
+            Writeline("B) Show my activities");
+            Writeline("C) Edit my alarms");
+
+            ConsoleKey command = Console.ReadKey(true).Key;
+
+            if (command == ConsoleKey.A)
+            {
+                ShowUserCalendar();
+            }
+            if (command == ConsoleKey.B)
+            {
+                ManageActivities();
+            }
+            if (command == ConsoleKey.C)
+            {
+                EditUserAlarms();
+            }
+            
         }
+
+        private void EditUserAlarms()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ManageActivities()
+        {
+            Header("Usernames Activities");
+
+            Console.WriteLine("You have the following activities:");
+            ShowUserActivites(); // till dataaccess
+            GetUserActivities(); // till dataaccess
+
+            Writeline("What do you want to do?");
+                Writeline("A) Add activity");
+            Writeline("B) Edit activity");
+
+            ConsoleKey command = Console.ReadKey(true).Key;
+            if (command == ConsoleKey.A) ;
+            {
+                AddUserActivity(); DataAccess
+
+            }
+            if (command == ConsoleKey.B)
+            {
+                Console.WriteLine("Which activity do you want do edit? Choose from above");
+
+            }
+
+
+
+
+        }
+
+        private void ShowUserCalendar()
+        {
+            GetUserCalendar(); //Printar ut calendern samt visar dagar som användaren har aktiviter på(?)
+        }
+
         private void Header(string v)
         {
             Console.ForegroundColor = ConsoleColor.Green;
