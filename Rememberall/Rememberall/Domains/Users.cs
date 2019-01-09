@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Rememberall.Domains
 {
-    class Users
+    public class Users
     {
         public int Id { get; set; }
         public string Username { get; set; }
