@@ -167,6 +167,7 @@ namespace Rememberall
             Writeline("What do you want to do?");
                 Writeline("A) Add activity");
             Writeline("B) Edit activity");
+            Writeline("C) Go back");
 
             ConsoleKey command = Console.ReadKey(true).Key;
             if (command == ConsoleKey.A)
@@ -183,17 +184,29 @@ namespace Rememberall
 
                 Console.WriteLine("Din aktivitet har sparats");
                 Thread.Sleep(2000);
-
-               
+                MainMenu();
             }
-
-              
-
-            
             if (command == ConsoleKey.B)
             {
                 Console.WriteLine("Which activity do you want do edit? Choose from above");
+                int activityId = int.Parse(Console.ReadLine());
+                Activities activity = _dataAccess.GetUserActivitiesById(activityId);
 
+                Console.WriteLine("Rename");
+                string newName = Console.ReadLine();
+                Console.WriteLine("Update time");
+                DateTime newDate = DateTime.Parse(Console.ReadLine());
+                activity.Activityname = newName;
+                activity.Date = newDate;
+
+                _dataAccess.UpdateActivityName(activity);
+                _dataAccess.UpdateActivityDate(activity);
+                MainMenu();
+
+            }
+            if (command == ConsoleKey.C)
+            {
+                MainMenu();
             }
 
 
@@ -205,7 +218,7 @@ namespace Rememberall
         {
             //GetUserCalendar(); //Printar ut calendern samt visar dagar som användaren har aktiviter på(?)
             //PrintUserCalender(); //Printar kalendern veckovis eller månadsvis, markerar dagens datum
-            ShowUserActivity();
+           // ShowUserActivity();
         }
 
         private void ShowUserActivity()
@@ -214,7 +227,7 @@ namespace Rememberall
 
             foreach (Activities item in list)
             {
-                Console.WriteLine(item.Activityname + "     " + item.Date);
+                Console.WriteLine(item.Id+ "     " +  item.Activityname + "     " + item.Date);
             }
         }
 

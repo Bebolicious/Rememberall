@@ -74,7 +74,7 @@ namespace Rememberall
 
         internal List<Activities> GetUserActivities(int? currentUserId)
         {
-            var sql = @"Select Activityname, ActivityDate from Activities
+            var sql = @"Select ActivityId, Activityname, ActivityDate from Activities
                         Join ManyActivities on Activities.Id = ManyActivities.ActivityId
                         join Users on ManyActivities.UserId = Users.Id
                          Where UserId = @Id";
@@ -92,9 +92,10 @@ namespace Rememberall
                 while (reader.Read())
                 {
                     var ap = new Activities
-                    {   
-                        Activityname = reader.GetSqlString(0).Value,
-                        Date = reader.GetSqlDateTime(1).Value
+                    {
+                        Id = reader.GetSqlInt32(0).Value,
+                        Activityname = reader.GetSqlString(1).Value,
+                        Date = reader.GetSqlDateTime(2).Value
                     };
                     list.Add(ap);
                 }
@@ -105,7 +106,7 @@ namespace Rememberall
 
         internal int AddUserActivity(string newActivity)
         {
-            
+
 
             var sql = @"INSERT Into Activities(Activityname) OUTPUT INSERTED.ID VALUES (@Activityname)";
 
@@ -116,7 +117,7 @@ namespace Rememberall
                 command.Parameters.Add(new SqlParameter("Activityname", newActivity));
 
                 int activityId = (int)command.ExecuteScalar();
-            return activityId;
+                return activityId;
             }
         }
 
@@ -133,8 +134,92 @@ namespace Rememberall
                 command.Parameters.Add(new SqlParameter("UserId", currentUserId));
 
                 command.ExecuteNonQuery();
-            
+
             }
         }
+
+        internal Activities GetUserActivitiesById(int activityId)
+        {
+            var sql = @"SELECT ActivityId, Activityname, ActivityDate
+                        FROM Activities
+                        Join ManyActivities on Activities.Id = ManyActivities.ActivityId
+                        WHERE ActivityId=@Id";
+
+            using (SqlConnection connection = new SqlConnection(conString))
+            using (SqlCommand command = new SqlCommand(sql, connection))
+            {
+                connection.Open();
+                command.Parameters.Add(new SqlParameter("Id", activityId));
+
+                SqlDataReader reader = command.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    var activity = new Activities
+                    {
+                        Id = reader.GetSqlInt32(0).Value,
+                        Activityname = reader.GetSqlString(1).Value,
+                        Date = reader.GetSqlDateTime(2).Value,
+
+                    };
+                    return activity;
+                }
+                return null;
+            }
+        }
+
+        internal void UpdateActivityDate(Activities activity)
+        {
+            var sql = @"Update ManyActivities
+                        SET ActivityDate = @ActivityDate
+                            Where ActivityId = @Id";
+
+            using (SqlConnection connection = new SqlConnection(conString))
+            using (SqlCommand command = new SqlCommand(sql, connection))
+            {
+                connection.Open();
+                command.Parameters.Add(new SqlParameter("ActivityDate", activity.Date));
+                command.Parameters.Add(new SqlParameter("Id", activity.Id));
+
+
+                command.ExecuteNonQuery();
+            }
+        }
+
+        internal void UpdateActivityName(Activities activity)
+        {
+            var sql = @"UPDATE Activities
+                        SET Activityname = @Activityname 
+                        WHERE Id = @Id";
+
+            using (SqlConnection connection = new SqlConnection(conString))
+            using (SqlCommand command = new SqlCommand(sql, connection))
+            {
+                connection.Open();
+                command.Parameters.Add(new SqlParameter("Activityname", activity.Activityname));
+                command.Parameters.Add(new SqlParameter("Id", activity.Id));
+
+
+                command.ExecuteNonQuery();
+            }
+        }
+
+        //internal void UpdateActivity(Activities activity)
+        //{
+        //    var sql = @"UPDATE ManyActivities
+        //                SET  ActivityDate = @Date
+        //                WHERE ActivityId = @Id";
+
+        //    using (SqlConnection connection = new SqlConnection(conString))
+        //    using (SqlCommand command = new SqlCommand(sql, connection))
+        //    {
+        //        connection.Open();
+        //        command.Parameters.Add(new SqlParameter("Date", activity.Date));
+        //        command.Parameters.Add(new SqlParameter("Id", activity.Id));
+
+
+        //        command.ExecuteNonQuery();
+        //    }
+        //}
     }
 }
