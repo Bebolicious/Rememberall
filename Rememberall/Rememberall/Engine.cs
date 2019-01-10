@@ -60,7 +60,7 @@ namespace Rememberall
             Write("Enter Password:");
             string pass = SetHiddenPass();
 
-            string Hashpass = Hash(pass);
+            string Hashpass = HashPass(pass);
 
 
             bool Username = DataAccess.MatchUsername(username, Hashpass);
@@ -97,7 +97,7 @@ namespace Rememberall
                 Write("Please choose a password:");
                 string input = SetHiddenPass();
 
-                string Newpassword = Hash(input);
+                string Newpassword = HashPass(input);
 
                 _dataAccess.CreateNewUser(Newuser, Newpassword);
                 Console.ForegroundColor = ConsoleColor.Green;
@@ -231,7 +231,7 @@ namespace Rememberall
             }
             return input.ToString();
         }
-        static string Hash(string input)
+        static string HashPass(string input)
         {
             var hash = (new SHA1Managed()).ComputeHash(Encoding.UTF8.GetBytes(input));
             return string.Join("", hash.Select(b => b.ToString("x2")).ToArray());
