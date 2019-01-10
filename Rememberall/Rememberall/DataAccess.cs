@@ -11,6 +11,7 @@ namespace Rememberall
     public class DataAccess
     {
         private const string conString = "Server=(localdb)\\mssqllocaldb; Database=Rememberall";
+        public int TrueId = 0;
 
         public void CreateNewUser(string NewUser, string NewPassword)
         {
@@ -71,6 +72,68 @@ namespace Rememberall
             }
         }
 
+        public static Users GetCurrentUserById(int? Id)
+        {
+
+            var sql = @"SELECT Username
+                        FROM Users 
+                        WHERE Id=@Id";
+
+            using (SqlConnection connection = new SqlConnection(conString))
+            using (SqlCommand command = new SqlCommand(sql, connection))
+            {
+                connection.Open();
+                command.Parameters.Add(new SqlParameter("Id", Id));
+
+                SqlDataReader reader = command.ExecuteReader();
+
+               
+
+                while (reader.Read())
+                {
+                    var UC = new Users
+                    {
+                        Username = reader.GetSqlString(0).Value,
+
+                    };
+                    return UC;
+                }
+                return null;
+            }
+        }
+
+        public static int? SetCurrentUser(string Username)
+        {
+            var sql = @"SELECT Id
+                        FROM Users
+                        WHERE Username=@Username";
+
+            using (SqlConnection connection = new SqlConnection(conString))
+            using (SqlCommand command = new SqlCommand(sql, connection))
+            {
+                connection.Open();
+                command.Parameters.Add(new SqlParameter("Username", Username));
+
+
+                SqlDataReader reader = command.ExecuteReader();
+
+                
+                while (reader.Read())
+                {
+                    var Currentuser = new Users
+                    {
+
+                        Id = reader.GetSqlInt32(0).Value,
+
+                    };
+                    return Currentuser.Id;
+                }
+                return null;
+                
+            }
+    
+
+        }
 
         internal List<Activities> GetUserActivities(int? currentUserId)
         {
