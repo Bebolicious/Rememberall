@@ -15,41 +15,33 @@ namespace Rememberall
         public static System.Drawing.Point Position { get; set; }
         DataAccess _dataAccess = new DataAccess();
         internal void Run()
-        {   // kan vara bra för att skriva ut veckodagar
-            //string s = "hello|world";
-            //Console.Setcursorposition((Console.windowwidth - s.length) / 2, console.cursortop);
-            //Console.Writeline(s);
-
-            LoginScreen();
-            MainMenu();
+        { 
+            LoginScreen();           
         }
 
         private void LoginScreen()
         {
             
-           // LoginScreenArt();
             Header("\n\nPlease log in or create an account");
             Writeline("A) Log In");
             Writeline("B) Create Account");
             Writeline("\nESC) Exit");
             ConsoleKey command = Console.ReadKey(true).Key;
-
-            if (command == ConsoleKey.A)
-                Login();
-
-            if (command == ConsoleKey.B)
-                CreateAccount();
-
-            if (command == ConsoleKey.Escape)
+                if (command == ConsoleKey.A)
+                    Login();
+                if (command == ConsoleKey.B)
+                    CreateAccount();
+                if (command == ConsoleKey.Escape)
                 Console.WriteLine();
 
             else
             {
-                Console.Clear();
                 LoginScreen();
-                
             }
-        }
+
+                           
+
+}
 
 
         private void Login()
@@ -132,9 +124,13 @@ namespace Rememberall
             displayCalendar();
 
             Console.WriteLine("What do you want to do?");
-            Writeline("A) Show my calendar");
-            Writeline("B) Show my activities");
-            Writeline("C) Edit my alarms");
+            Writeline("A) Calendar");
+            Writeline("B) Activities");
+            Writeline("C) Alarms\n");
+            Console.Write("D) User settings\n\nE)");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(" Log out");
+            Console.ForegroundColor = ConsoleColor.White;
 
             ConsoleKey command = Console.ReadKey(true).Key;
 
@@ -150,7 +146,15 @@ namespace Rememberall
             {
                 EditUserAlarms();
             }
-            
+            if (command == ConsoleKey.D)
+            {
+                EditUserAlarms();
+            }
+            if (command == ConsoleKey.E)
+            {
+                LoginScreen();
+            }
+
         }
 
         private void EditUserAlarms()
@@ -160,7 +164,10 @@ namespace Rememberall
 
         private void ManageActivities()
         {
-            Header("Usernames Activities");
+            int TempId = Users.CurrentUserId.Value;
+
+            var Cu = DataAccess.GetCurrentUserById(TempId);
+            Header($"{Cu.Username}'s Activities");
 
             Console.WriteLine("You have the following activities:");
             Console.WriteLine();
@@ -186,9 +193,10 @@ namespace Rememberall
                 DateTime newDateTime = DateTime.Parse(Console.ReadLine());
 
                 _dataAccess.AddManyActivities(acktivity, newDateTime, Users.CurrentUserId);
-
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Din aktivitet har sparats");
-                Thread.Sleep(2000);
+                Console.ForegroundColor = ConsoleColor.White;
+                Thread.Sleep(1000);
                 MainMenu();
             }
             if (command == ConsoleKey.B)
@@ -292,10 +300,11 @@ namespace Rememberall
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine(v);
         }
-        public void LoginScreenArt()
+        private void CloseApp()
         {
-
+            Console.WriteLine();
         }
+
         private void Write(string v)
         {
 
