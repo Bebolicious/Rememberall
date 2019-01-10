@@ -205,6 +205,9 @@ namespace Rememberall
         {
             var sql = @"DELETE FROM Activities WHERE Id = @Id";
 
+            //ActivityId foreign key references Activities(Id) on delete cascade
+            
+
             using (SqlConnection connection = new SqlConnection(conString))
             using (SqlCommand command = new SqlCommand(sql, connection))
             {

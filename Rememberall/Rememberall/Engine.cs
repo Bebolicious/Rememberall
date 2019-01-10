@@ -172,7 +172,7 @@ namespace Rememberall
             Console.WriteLine("You have the following activities:");
             Console.WriteLine();
             //GetUserActivities(); // till dataaccess
-            ShowUserActivity();
+            var rowdic = ShowUserActivity();
 
 
             Writeline("What do you want to do?");
@@ -202,7 +202,10 @@ namespace Rememberall
             if (command == ConsoleKey.B)
             {
                 Console.WriteLine("Which activity do you want do edit? Choose from above");
-                int activityId = int.Parse(Console.ReadLine());
+
+                int rownumber = int.Parse(Console.ReadLine());
+                int activityId = rowdic[rownumber];
+                //int activityId = int.Parse(Console.ReadLine());
                 Activities activity = _dataAccess.GetUserActivitiesById(activityId);
 
                 Console.WriteLine("Rename");
@@ -220,9 +223,14 @@ namespace Rememberall
             if (command == ConsoleKey.C)
             {
                 Console.WriteLine("Which activity do you want to delete? Choose from above");
-                int activityId = int.Parse(Console.ReadLine());
+                int rownumber = int.Parse(Console.ReadLine());
+                int activityId = rowdic[rownumber];
+               // int activityId = int.Parse(Console.ReadLine());
                 Activities deleteActivity = _dataAccess.GetUserActivitiesById(activityId);
                 _dataAccess.DeleteActivity(deleteActivity);
+                Console.WriteLine("Your activity has been deleted");
+                Thread.Sleep(2000);
+                MainMenu();
             }
             if (command == ConsoleKey.D)
             {
@@ -245,14 +253,20 @@ namespace Rememberall
         }
 
 
-        private void ShowUserActivity()
+        private Dictionary<int, int> ShowUserActivity()
         {
             List<Activities> list = _dataAccess.GetUserActivities(Users.CurrentUserId);
 
+            Dictionary<int, int> rowdic = new Dictionary<int, int>();
+
+            int rownumber = 1;
+
             foreach (Activities item in list)
             {
-                Console.WriteLine(item.Id+ "     " +  item.Activityname + "     " + item.Date);
+                rowdic.Add(rownumber, item.Id);
+                Console.WriteLine("(" + rownumber + ")     " +  item.Activityname + "     " + item.Date);
             }
+            return rowdic;
         }
 
         public string SetHiddenPass()
