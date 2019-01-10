@@ -184,6 +184,23 @@ namespace Rememberall
             }
         }
 
+        internal static void SetAlarmDate(DateTime alarmdate, string alarmname, DateTime alarmtime)
+        {
+            var sql = @"INSERT INTO Alarms(DateId) VALUES (@DateId)";
+
+            using (SqlConnection connection = new SqlConnection(conString))
+            using (SqlCommand command = new SqlCommand(sql, connection))
+            {
+                connection.Open();
+                command.Parameters.Add(new SqlParameter("DateId", alarmdate));
+
+                command.ExecuteNonQuery();
+
+            }
+
+
+        }
+
         internal void AddManyActivities(int acktivity, DateTime newDateTime, int? currentUserId)
         {
             var sql = @"INSERT Into ManyActivities(ActivityId, ActivityDate, UserId) VALUES (@ActivityId, @ActivityDate, @UserId)";
