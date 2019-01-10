@@ -74,7 +74,7 @@ namespace Rememberall
 
         internal List<Activities> GetUserActivities(int? currentUserId)
         {
-            var sql = @"Select Activityname, Date from Activities
+            var sql = @"Select Activityname, ActivityDate from Activities
                         Join ManyActivities on Activities.Id = ManyActivities.ActivityId
                         join Users on ManyActivities.UserId = Users.Id
                          Where UserId = @Id";
@@ -92,7 +92,7 @@ namespace Rememberall
                 while (reader.Read())
                 {
                     var ap = new Activities
-                    {
+                    {   
                         Activityname = reader.GetSqlString(0).Value,
                         Date = reader.GetSqlDateTime(1).Value
                     };
@@ -103,14 +103,38 @@ namespace Rememberall
             }
         }
 
-        internal Activities AddUserActivity(int? currentUserId)
+        internal int AddUserActivity(string newActivity)
         {
-            Console.WriteLine("Name your activity");
-            string newActivity = Console.ReadLine();
+            
 
-            Console.WriteLine("Add a date for the activity");
-            DateTime newDateTime = DateTime.Parse(Console.ReadLine());
-            return null;
+            var sql = @"INSERT Into Activities(Activityname) OUTPUT INSERTED.ID VALUES (@Activityname)";
+
+            using (SqlConnection connection = new SqlConnection(conString))
+            using (SqlCommand command = new SqlCommand(sql, connection))
+            {
+                connection.Open();
+                command.Parameters.Add(new SqlParameter("Activityname", newActivity));
+
+                int activityId = (int)command.ExecuteScalar();
+            return activityId;
+            }
+        }
+
+        internal void AddManyActivities(int acktivity, DateTime newDateTime, int? currentUserId)
+        {
+            var sql = @"INSERT Into ManyActivities(ActivityId, ActivityDate, UserId) VALUES (@ActivityId, @ActivityDate, @UserId)";
+
+            using (SqlConnection connection = new SqlConnection(conString))
+            using (SqlCommand command = new SqlCommand(sql, connection))
+            {
+                connection.Open();
+                command.Parameters.Add(new SqlParameter("ActivityId", acktivity));
+                command.Parameters.Add(new SqlParameter("ActivityDate", newDateTime));
+                command.Parameters.Add(new SqlParameter("UserId", currentUserId));
+
+                command.ExecuteNonQuery();
+            
+            }
         }
     }
 }

@@ -164,7 +164,20 @@ namespace Rememberall
             ConsoleKey command = Console.ReadKey(true).Key;
             if (command == ConsoleKey.A)
             {
-                Activities acktivity = _dataAccess.AddUserActivity(Users.CurrentUserId);
+                Console.WriteLine("Name your activity");
+                string newActivity = Console.ReadLine();
+                int acktivity = _dataAccess.AddUserActivity(newActivity);
+
+
+                Console.WriteLine("Add a date for the activity");
+                DateTime newDateTime = DateTime.Parse(Console.ReadLine());
+
+                _dataAccess.AddManyActivities(acktivity, newDateTime, Users.CurrentUserId);
+
+                Console.WriteLine("Din aktivitet har sparats");
+                Thread.Sleep(2000);
+
+               
             }
 
               
