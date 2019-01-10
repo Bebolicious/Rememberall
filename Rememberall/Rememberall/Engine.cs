@@ -125,7 +125,10 @@ namespace Rememberall
 
             displayCalendar();
 
+            Console.WriteLine();
             Console.WriteLine("What do you want to do?");
+            Console.WriteLine();
+
             Writeline("A) Calendar");
             Writeline("B) Activities");
             Writeline("C) Alarms\n");
@@ -221,9 +224,11 @@ namespace Rememberall
             Console.WriteLine();
             //GetUserActivities(); // till dataaccess
             var rowdic = ShowUserActivity();
+            Console.WriteLine();
 
 
             Writeline("What do you want to do?");
+            Console.WriteLine();
             Writeline("A) Add activity");
             Writeline("B) Edit activity");
             Writeline("C) Delete activity");
@@ -237,7 +242,7 @@ namespace Rememberall
                 int acktivity = _dataAccess.AddUserActivity(newActivity);
 
 
-                Console.WriteLine("Add a date for the activity");
+                Console.WriteLine("Add a date and time for the activity(YYYY-MM-DD HH:MM:SS");
                 DateTime newDateTime = DateTime.Parse(Console.ReadLine());
 
                 _dataAccess.AddManyActivities(acktivity, newDateTime, Users.CurrentUserId);
@@ -296,8 +301,18 @@ namespace Rememberall
             //GetUserCalendar(); //Printar ut calendern samt visar dagar som användaren har aktiviter på(?)
             //PrintUserCalender(); //Printar kalendern veckovis eller månadsvis, markerar dagens datum
             // ShowUserActivity();
-            
-            displayCalendar();
+
+            //FUNKAR, Men kan bli många if-satser. Fortsätt på fredag.
+            //ConsoleKey command = Console.ReadKey(true).Key;
+            //if (command == ConsoleKey.A)
+            //{
+            //    int move = 1;
+            //displayCalendar(move);
+            //    Thread.Sleep(5000);
+
+            //}
+
+
         }
 
 
@@ -312,7 +327,9 @@ namespace Rememberall
             foreach (Activities item in list)
             {
                 rowdic.Add(rownumber, item.Id);
-                Console.WriteLine("(" + rownumber + ")     " +  item.Activityname + "     " + item.Date);
+               // Console.WriteLine("(" + rownumber + ")     " +  item.Activityname + "     " + item.Date);
+                Console.WriteLine($"{rownumber.ToString().PadRight(10)}{item.Activityname.PadRight(40)}{item.Date}");
+                rownumber++;
             }
             return rowdic;
         }
@@ -369,7 +386,7 @@ namespace Rememberall
 
         private void Write(string v)
         {
-
+            
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write(v);
         }
@@ -445,7 +462,7 @@ namespace Rememberall
         private static void displayCalendar()
         {
             int CurrentYear = DateTime.Today.Year;
-            int CurrentMonth = DateTime.Today.Month;
+            int CurrentMonth = DateTime.Today.Month; //  int v + v-------------------Ändra här för att ändra månad +1= februari, +2=mars etc.
             int CurrentDay = DateTime.Today.Day;
             displayCalendar(CurrentYear, CurrentMonth, CurrentDay);
         }
@@ -492,11 +509,12 @@ namespace Rememberall
                     DayString = Counter.ToString();
                 }
 
-                // highlight todays date (using *)
+                // highlight todays date (using *) ------------------- Lägga till aktivitet
                 if (TheDay != 1 && Counter == TheDay)
                 {
                     DayString = String.Concat("*", DayString);
                 }
+             
 
                 // start a new line only if this isn't the first day
                 if (DayOfWeek % 7 == 0 && Counter > 1)
@@ -530,6 +548,7 @@ namespace Rememberall
 
             Console.WriteLine();
             Console.WriteLine(String.Concat("\t\t", Header));
+            //Console.WriteLine("*=Current day");
             Console.WriteLine(Days);
             Console.WriteLine(Divider);
         }
