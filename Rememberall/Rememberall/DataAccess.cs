@@ -184,15 +184,18 @@ namespace Rememberall
             }
         }
 
-        internal static void SetAlarmDate(DateTime alarmdate, string alarmname, DateTime alarmtime)
+        internal static void SetAlarmDate(DateTime alarmdate, string alarmname, string alarmtime)
         {
-            var sql = @"INSERT INTO Alarms(DateId) VALUES (@DateId)";
+            var sql = @"INSERT INTO Alarms(DateId, Alarmname, Alarmtime) VALUES (@DateId, @Alarmname, @Alarmtime)";
 
             using (SqlConnection connection = new SqlConnection(conString))
             using (SqlCommand command = new SqlCommand(sql, connection))
             {
                 connection.Open();
                 command.Parameters.Add(new SqlParameter("DateId", alarmdate));
+                command.Parameters.Add(new SqlParameter("Alarmname", alarmname));
+                command.Parameters.Add(new SqlParameter("Alarmtime", alarmtime));
+
 
                 command.ExecuteNonQuery();
 
@@ -218,6 +221,11 @@ namespace Rememberall
             }
         }
 
+        //internal List<Activities> GetUserAlarms(int UserId)
+        //{
+            
+        //}
+
         internal void DeleteActivity(Activities deleteActivity)
         {
             var sql = @"DELETE FROM Activities WHERE Id = @Id";
@@ -235,7 +243,6 @@ namespace Rememberall
             }
         }
     
-
         internal Activities GetUserActivitiesById(int activityId)
         {
             var sql = @"SELECT ActivityId, Activityname, ActivityDate

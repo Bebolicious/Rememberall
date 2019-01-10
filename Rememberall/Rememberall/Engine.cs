@@ -18,16 +18,20 @@ namespace Rememberall
         DataAccess _dataAccess = new DataAccess();
         internal void Run()
         {
+            
             LoginScreen();
         }
 
         private void LoginScreen()
         {
-
             Header("\n\nPlease log in or create an account");
-            Writeline("A) Log In");
-            Writeline("B) Create Account");
-            Writeline("\nESC) Exit");
+            Header2("  A) Log in", "\n   B) Create account", "\n   ESC) Exit");
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            Header1("Rememberall", "Version 1.8");
+
             ConsoleKey command = Console.ReadKey(true).Key;
             if (command == ConsoleKey.A)
                 Login();
@@ -123,15 +127,15 @@ namespace Rememberall
             var Cu = DataAccess.GetCurrentUserById(TempId);
       Header($"Welcome {Cu.Username}");
 
-            displayCalendar();
-
+            DisplayCalendar();
+            Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("What do you want to do?");
             Writeline("A) Calendar");
             Writeline("B) Activities");
             Writeline("C) Alarms\n");
-            Console.Write("D) User settings\n\nE)");
+            Console.Write("D) User settings\n\n");
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine(" Log out");
+            Console.WriteLine("E) Change user\nF) Log out");
             Console.ForegroundColor = ConsoleColor.White;
 
             ConsoleKey command = Console.ReadKey(true).Key;
@@ -153,6 +157,10 @@ namespace Rememberall
                 EditUserAlarms();
             }
             if (command == ConsoleKey.E)
+            {
+                Login();
+            }
+            if (command == ConsoleKey.F)
             {
                 LoginScreen();
             }
@@ -177,38 +185,62 @@ namespace Rememberall
             Writeline("C) Go back");
 
             ConsoleKey alarmcommand = Console.ReadKey(true).Key;
-            if (alarmcommand == ConsoleKey.A)
-            {
-                Header("Set new alarm");
-                Writeline("Do you want to name your alarm?");
-                Writeline("A) Yes");
-                Writeline("B) No");
-                ConsoleKey alarmcommand2 = Console.ReadKey(true).Key;
-
-                string alarmname;
-                if (alarmcommand2 == ConsoleKey.A)
-                {
-                    Write("Name your alarm: ");
-                    alarmname = Console.ReadLine();
-                }
-                else
-                {
-                    alarmname = "DEFAULT";
-                }
-                // Händer alltid
-                Header("Set new alarm");
-                Console.Write("Set date: ");
-                DateTime alarmdate = DateTime.Parse(Console.ReadLine());
-                Write("Set time for the alarm: ");
-                DateTime alarmtime = DateTime.Parse(Console.ReadLine());
-                DataAccess.SetAlarmDate(alarmdate, alarmname, alarmtime);
-            }
+            if (alarmcommand == ConsoleKey.A)           
+                SetNewAlarm();
             if (alarmcommand == ConsoleKey.B)
-            { }
+                MainMenu();
             if (alarmcommand == ConsoleKey.C)
                 MainMenu();
 
+            EditUserAlarms();
         }
+
+        private void SetNewAlarm()
+        {
+
+            Header("Set new alarm");
+            Writeline("Do you want to name your alarm?");
+            Writeline("A) Yes");
+            Writeline("B) No");
+            ConsoleKey alarmcommand2 = Console.ReadKey(true).Key;
+
+            string alarmname;
+            if (alarmcommand2 == ConsoleKey.A)
+            {
+                Console.ForegroundColor = ConsoleColor.White;
+                Write("Name your alarm: ");
+                alarmname = Console.ReadLine();
+            }
+            else
+            {
+                alarmname = "Alarm";
+            }
+            Header("Set new alarm");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("Set date: ");
+            DateTime alarmdate = DateTime.Parse(Console.ReadLine());
+            Write("Set time for the alarm: ");
+            string time = Console.ReadLine();
+            DataAccess.SetAlarmDate(alarmdate, alarmname, time);
+        
+    }
+
+        //private Dictionary<int, int> ShowAllAlarms()
+        //{
+        //    int TempId = Users.CurrentUserId.Value;
+        //    var Cu = DataAccess.GetCurrentUserById(TempId);
+        //    int rows = 1;
+        //    List<Alarms> list = DataAccess.GetUserAlarms(Cu.Id);
+        //    Dictionary<int, int> Alarmdictionary = new Dictionary<int, int>();
+
+        //        foreach (Alarms item in list)
+        //        {
+        //        Alarmdictionary.Add(rows, item.Id);
+        //            Console.WriteLine("(" + rows + ")     " + item.Alarmname + "     " + item.Alarmtime);
+        //        }
+        //        return Alarmdictionary;
+
+        //}
 
         private void ManageActivities()
         {
@@ -241,7 +273,21 @@ namespace Rememberall
                 DateTime newDateTime = DateTime.Parse(Console.ReadLine());
 
                 _dataAccess.AddManyActivities(acktivity, newDateTime, Users.CurrentUserId);
-                Console.ForegroundColor = ConsoleColor.Green;
+
+                Console.WriteLine("Do you want to set an alarm for this activity?");
+                Console.WriteLine("A) Yes");
+                Console.WriteLine("B) No");
+                ConsoleKey alarmcommand = Console.ReadKey(true).Key;
+                if (alarmcommand == ConsoleKey.A)
+                    SetNewAlarm();
+                else
+                {
+
+                    MainMenu();
+                }
+
+
+                    Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Din aktivitet har sparats");
                 Console.ForegroundColor = ConsoleColor.White;
                 Thread.Sleep(1000);
@@ -297,7 +343,7 @@ namespace Rememberall
             //PrintUserCalender(); //Printar kalendern veckovis eller månadsvis, markerar dagens datum
             // ShowUserActivity();
             
-            displayCalendar();
+            DisplayCalendar();
         }
 
 
@@ -339,6 +385,7 @@ namespace Rememberall
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.DarkRed;
+
             Console.WriteLine(@"
 ██▀███  ▓█████  ███▄ ▄███▓▓█████  ███▄ ▄███▓ ▄▄▄▄   ▓█████  ██▀███   ▄▄▄       ██▓     ██▓    
 ▓██ ▒ ██▒▓█   ▀ ▓██▒▀█▀ ██▒▓█   ▀ ▓██▒▀█▀ ██▒▓█████▄ ▓█   ▀ ▓██ ▒ ██▒▒████▄    ▓██▒    ▓██▒    
@@ -352,28 +399,54 @@ namespace Rememberall
                                                    ░                                           ");
 
 
+
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine();
             Console.WriteLine(v.ToUpper());
+            
             Console.WriteLine();
         }
+
         public void Writeline(string v)
         {
             Console.ForegroundColor = ConsoleColor.White;
+
             Console.WriteLine(v);
-        }
-        private void CloseApp()
-        {
-            Console.WriteLine();
         }
 
         private void Write(string v)
         {
 
             Console.ForegroundColor = ConsoleColor.White;
-            Console.Write(v);
+            Console.Write(v);      
+
         }
 
+        public static void Header1(string title, string subtitle = "")
+        {
+            int windowWidth = 90 - 2;
+            string titleContent = string.Format("║{0," + ((windowWidth / 2) + (title.Length / 2)) + "}{1," + (windowWidth - (windowWidth / 2) - (title.Length / 2) + 7) + "}", title, "║");
+            string subtitleContent = string.Format("║{0," + ((windowWidth / 2) + (subtitle.Length / 2)) + "}{1," + (windowWidth - (windowWidth / 2) - (subtitle.Length / 2) + 7) + "}", subtitle, "║");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("╔══════════════════════════════════════════════════════════════════════════════════════════════╗");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine(titleContent);
+           
+            if (!string.IsNullOrEmpty(subtitle))
+            {
+                Console.WriteLine(subtitleContent);
+            }
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("╚══════════════════════════════════════════════════════════════════════════════════════════════╝");
+        }
+
+        public static void Header2(string v, string b, string c)
+        {
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("╔═════════════════════╗");
+            Console.WriteLine("║" + v + b + c + "          ║");
+            Console.WriteLine("╚═════════════════════╝");
+        }
 
         //private void DisplayCalendar(string[] args)
         //{
@@ -431,7 +504,7 @@ namespace Rememberall
         //}
 
         // help
-        private static void displayUsage()
+        private static void DisplayUsage()
         {
             Console.WriteLine("Console Calendar (c) Copyright 2002 Michael Eaton");
             Console.WriteLine("usage: calendar <year> <month>");
@@ -442,20 +515,20 @@ namespace Rememberall
 
         // the guts (overloaded methods)
         // default to the current month
-        private static void displayCalendar()
+        private static void DisplayCalendar()
         {
             int CurrentYear = DateTime.Today.Year;
             int CurrentMonth = DateTime.Today.Month;
             int CurrentDay = DateTime.Today.Day;
-            displayCalendar(CurrentYear, CurrentMonth, CurrentDay);
+            DisplayCalendar(CurrentYear, CurrentMonth, CurrentDay);
         }
 
-        private static void displayCalendar(int TheYear, int TheMonth)
+        private static void DisplayCalendar(int TheYear, int TheMonth)
         {
-            displayCalendar(TheYear, TheMonth, 1);
+            DisplayCalendar(TheYear, TheMonth, 1);
         }
 
-        private static void displayCalendar(int TheYear, int TheMonth, int TheDay)
+        private static void DisplayCalendar(int TheYear, int TheMonth, int TheDay)
         {
             // default to the first of the month
             Int16 FirstDayOfMonth = 1;
@@ -471,7 +544,7 @@ namespace Rememberall
 
             // this will display the month name and
             // the headings for the days of the week.
-            displayHeader(getMonthName(TheMonth), TheYear.ToString(), true);
+            DisplayHeader(GetMonthName(TheMonth), TheYear.ToString(), true);
 
             // accumulator used so we'll know when to wrap 
             // to the next week.
@@ -511,10 +584,12 @@ namespace Rememberall
             }
             // blank line after the calendar has been printed
             Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
         }
         // ÄNDRA HÄR---------------------------------------------------
         // header for the calendar display
-        private static void displayHeader(string theMonthName, string theYear, bool ShowCurrentDate)
+        private static void DisplayHeader(string theMonthName, string theYear, bool ShowCurrentDate)
         {
             // the Month, year
             string Header = String.Concat(theMonthName, ", ");
@@ -534,14 +609,13 @@ namespace Rememberall
             Console.WriteLine(Divider);
         }
 
-        private static string getMonthName(int theMonth)
+        private static string GetMonthName(int theMonth)
         {
-            // changes suggested by Brandon Croft.  Much shorter than
-            // using the arraylist!
+
             DateTimeFormatInfo info = new DateTimeFormatInfo();
             string month = info.MonthNames[theMonth - 1];
             return month;
         }
     
     }
-}
+    }
