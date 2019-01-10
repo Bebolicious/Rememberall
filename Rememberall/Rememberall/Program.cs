@@ -9,14 +9,11 @@ namespace Rememberall
         {
 
 
-
             Users.CurrentUserId = 1;
             var engine = new Engine();
             engine.Run();
 
             
-
-
 
         }
     }

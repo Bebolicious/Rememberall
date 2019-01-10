@@ -201,6 +201,21 @@ namespace Rememberall
             }
         }
 
+        internal void DeleteActivity(Activities deleteActivity)
+        {
+            var sql = @"DELETE FROM Activities WHERE Id = @Id";
+
+            using (SqlConnection connection = new SqlConnection(conString))
+            using (SqlCommand command = new SqlCommand(sql, connection))
+            {
+                connection.Open();
+                command.Parameters.Add(new SqlParameter("Id", deleteActivity.Id));
+
+                command.ExecuteNonQuery();
+            }
+        }
+    
+
         internal Activities GetUserActivitiesById(int activityId)
         {
             var sql = @"SELECT ActivityId, Activityname, ActivityDate
@@ -284,5 +299,6 @@ namespace Rememberall
         //        command.ExecuteNonQuery();
         //    }
         //}
+        
     }
 }
