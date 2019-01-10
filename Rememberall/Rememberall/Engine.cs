@@ -26,7 +26,7 @@ namespace Rememberall
         private void LoginScreen()
         {
             
-            LoginScreenArt();
+           // LoginScreenArt();
             Header("\n\nPlease log in or create an account");
             Writeline("A) Log In");
             Writeline("B) Create Account");
@@ -67,6 +67,8 @@ namespace Rememberall
 
             if (Username==true)
             {
+                
+                Users.CurrentUserId = DataAccess.SetCurrentUser(username);
                 MainMenu();
             }
             else
@@ -119,14 +121,13 @@ namespace Rememberall
     }
 }
 
-
-
-
-
         private void MainMenu()
-        { 
-      Header("Welcome ");
-            Users.CurrentUserId = 1;
+        {
+            int TempId = Users.CurrentUserId.Value;
+
+            var Cu = DataAccess.GetCurrentUserById(TempId);
+      Header($"Welcome {Cu.Username}");
+            
             Console.WriteLine("What do you want to do?");
             Writeline("A) Show my calendar");
             Writeline("B) Show my activities");
