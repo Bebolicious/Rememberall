@@ -5,32 +5,34 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
+using System.Timers;
+
 
 namespace Rememberall
 {
     class Engine
     {
-     
+
         public static System.Drawing.Point Position { get; set; }
         DataAccess _dataAccess = new DataAccess();
         internal void Run()
-        { 
-            LoginScreen();           
+        {
+            LoginScreen();
         }
 
         private void LoginScreen()
         {
-            
+
             Header("\n\nPlease log in or create an account");
             Writeline("A) Log In");
             Writeline("B) Create Account");
             Writeline("\nESC) Exit");
             ConsoleKey command = Console.ReadKey(true).Key;
-                if (command == ConsoleKey.A)
-                    Login();
-                if (command == ConsoleKey.B)
-                    CreateAccount();
-                if (command == ConsoleKey.Escape)
+            if (command == ConsoleKey.A)
+                Login();
+            if (command == ConsoleKey.B)
+                CreateAccount();
+            if (command == ConsoleKey.Escape)
                 Console.WriteLine();
 
             else
@@ -38,9 +40,9 @@ namespace Rememberall
                 LoginScreen();
             }
 
-                           
 
-}
+
+        }
 
 
         private void Login()
@@ -57,9 +59,9 @@ namespace Rememberall
 
             bool Username = DataAccess.MatchUsername(username, Hashpass);
 
-            if (Username==true)
+            if (Username == true)
             {
-                
+
                 Users.CurrentUserId = DataAccess.SetCurrentUser(username);
                 MainMenu();
             }
@@ -97,29 +99,29 @@ namespace Rememberall
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.ReadKey();
                 LoginScreen();
-                
+
             }
 
             catch (System.Data.SqlClient.SqlException)
             {
-               
+
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Username is taken");
                 Console.ForegroundColor = ConsoleColor.White;
                 Thread.Sleep(2000);
-        CreateAccount();
+                CreateAccount();
 
 
-    }
-}
+            }
+        }
 
         private void MainMenu()
         {
             int TempId = Users.CurrentUserId.Value;
 
             var Cu = DataAccess.GetCurrentUserById(TempId);
-             Header($"Welcome {Cu.Username}");
-            
+            Header($"Welcome {Cu.Username}");
+
             Console.WriteLine("What do you want to do?");
             Writeline("A) Calendar");
             Writeline("B) Activities");
@@ -151,12 +153,58 @@ namespace Rememberall
             {
                 LoginScreen();
             }
-
         }
+
+
+
+
 
         private void EditUserAlarms()
         {
-            throw new NotImplementedException();
+            int TempId = Users.CurrentUserId.Value;
+            var Cu = DataAccess.GetCurrentUserById(TempId);
+            DateTime Currenttime = DateTime.UtcNow;
+            Header($"{Cu.Username}'s Alarms");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write("What do you want to do?");
+            Console.ForegroundColor = ConsoleColor.White;
+            Writeline(Currenttime.ToString().PadLeft(50));
+            Writeline("A) Set alarm");
+            Writeline("B) Edit alarm\n");
+            Writeline("C) Go back");
+
+            ConsoleKey alarmcommand = Console.ReadKey(true).Key;
+            if (alarmcommand == ConsoleKey.A)
+            {
+                Header("Set new alarm");
+                Writeline("Do you want to name your alarm?");
+                Writeline("A) Yes");
+                Writeline("B) No");
+                ConsoleKey alarmcommand2 = Console.ReadKey(true).Key;
+
+                string alarmname;
+                if (alarmcommand2 == ConsoleKey.A)
+                {
+                    Write("Name your alarm: ");
+                    alarmname = Console.ReadLine();
+                }
+                else
+                {
+                    alarmname = "DEFAULT";
+                }
+                // Händer alltid
+                Header("Set new alarm");
+                Console.Write("Set date: ");
+                DateTime alarmdate = DateTime.Parse(Console.ReadLine());
+                Write("Set time for the alarm: ");
+                DateTime alarmtime = DateTime.Parse(Console.ReadLine());
+                DataAccess.SetAlarmDate(alarmdate, alarmname, alarmtime);
+            }
+            if (alarmcommand == ConsoleKey.B)
+            { }
+            if (alarmcommand == ConsoleKey.C)
+                MainMenu();
+
         }
 
         private void ManageActivities()
@@ -173,7 +221,7 @@ namespace Rememberall
 
 
             Writeline("What do you want to do?");
-                Writeline("A) Add activity");
+            Writeline("A) Add activity");
             Writeline("B) Edit activity\n");
             Writeline("C) Go back");
 
@@ -227,7 +275,7 @@ namespace Rememberall
         {
             //GetUserCalendar(); //Printar ut calendern samt visar dagar som användaren har aktiviter på(?)
             //PrintUserCalender(); //Printar kalendern veckovis eller månadsvis, markerar dagens datum
-           // ShowUserActivity();
+            // ShowUserActivity();
         }
 
         private void ShowUserActivity()
@@ -236,7 +284,7 @@ namespace Rememberall
 
             foreach (Activities item in list)
             {
-                Console.WriteLine(item.Id+ "     " +  item.Activityname + "     " + item.Date);
+                Console.WriteLine(item.Id + "     " + item.Activityname + "     " + item.Date);
             }
         }
 
@@ -274,10 +322,10 @@ namespace Rememberall
    ░        ░  ░       ░      ░  ░       ░    ░         ░  ░   ░           ░  ░    ░  ░    ░  ░
                                                    ░                                           ");
 
-        
-        Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine();   
-            Console.WriteLine(v.ToUpper()); 
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine();
+            Console.WriteLine(v.ToUpper());
             Console.WriteLine();
         }
         public void Writeline(string v)
@@ -296,5 +344,6 @@ namespace Rememberall
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write(v);
         }
+
     }
 }
