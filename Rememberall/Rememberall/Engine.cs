@@ -25,6 +25,7 @@ namespace Rememberall
 
         private void LoginScreen()
         {
+            
             LoginScreenArt();
             Header("\n\nPlease log in or create an account");
             Writeline("A) Log In");
@@ -44,6 +45,7 @@ namespace Rememberall
             else
             {
                 Console.Clear();
+                LoginScreen();
                 
             }
         }
@@ -69,7 +71,9 @@ namespace Rememberall
             }
             else
             {
-                Writeline("Wrong Username or Password, try again.");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Wrong Username or Password, try again.");
+                Console.ForegroundColor = ConsoleColor.White;
                 Console.ReadKey();
                 Login();
             }
@@ -87,7 +91,6 @@ namespace Rememberall
                 Header("Create new account");
                 Write("Please choose a username:");
                 string Newuser = Console.ReadLine();
-                Console.Clear();
                 Header("Create new account");
                 Write("Please choose a password:");
                 string input = SetHiddenPass();
@@ -95,9 +98,13 @@ namespace Rememberall
                 string Newpassword = Hash(input);
 
                 _dataAccess.CreateNewUser(Newuser, Newpassword);
-
-                Writeline("User has been created");
-        }
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("User has been created");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.ReadKey();
+                LoginScreen();
+                
+            }
 
             catch (System.Data.SqlClient.SqlException)
             {
@@ -119,7 +126,7 @@ namespace Rememberall
         private void MainMenu()
         { 
       Header("Welcome ");
-
+            Users.CurrentUserId = 1;
             Console.WriteLine("What do you want to do?");
             Writeline("A) Show my calendar");
             Writeline("B) Show my activities");
@@ -219,9 +226,23 @@ namespace Rememberall
         public void Header(string v)
         {
             Console.Clear();
-            Console.ForegroundColor = ConsoleColor.Green;
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.WriteLine(@"
+██▀███  ▓█████  ███▄ ▄███▓▓█████  ███▄ ▄███▓ ▄▄▄▄   ▓█████  ██▀███   ▄▄▄       ██▓     ██▓    
+▓██ ▒ ██▒▓█   ▀ ▓██▒▀█▀ ██▒▓█   ▀ ▓██▒▀█▀ ██▒▓█████▄ ▓█   ▀ ▓██ ▒ ██▒▒████▄    ▓██▒    ▓██▒    
+▓██ ░▄█ ▒▒███   ▓██    ▓██░▒███   ▓██    ▓██░▒██▒ ▄██▒███   ▓██ ░▄█ ▒▒██  ▀█▄  ▒██░    ▒██░    
+▒██▀▀█▄  ▒▓█  ▄ ▒██    ▒██ ▒▓█  ▄ ▒██    ▒██ ▒██░█▀  ▒▓█  ▄ ▒██▀▀█▄  ░██▄▄▄▄██ ▒██░    ▒██░    
+░██▓ ▒██▒░▒████▒▒██▒   ░██▒░▒████▒▒██▒   ░██▒░▓█  ▀█▓░▒████▒░██▓ ▒██▒ ▓█   ▓██▒░██████▒░██████▒
+░ ▒▓ ░▒▓░░░ ▒░ ░░ ▒░   ░  ░░░ ▒░ ░░ ▒░   ░  ░░▒▓███▀▒░░ ▒░ ░░ ▒▓ ░▒▓░ ▒▒   ▓▒█░░ ▒░▓  ░░ ▒░▓  ░
+  ░▒ ░ ▒░ ░ ░  ░░  ░      ░ ░ ░  ░░  ░      ░▒░▒   ░  ░ ░  ░  ░▒ ░ ▒░  ▒   ▒▒ ░░ ░ ▒  ░░ ░ ▒  ░
+  ░░   ░    ░   ░      ░      ░   ░      ░    ░    ░    ░     ░░   ░   ░   ▒     ░ ░     ░ ░   
+   ░        ░  ░       ░      ░  ░       ░    ░         ░  ░   ░           ░  ░    ░  ░    ░  ░
+                                                   ░                                           ");
+
+        
+        Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine();   
-            Console.WriteLine(v.ToUpper());
+            Console.WriteLine(v.ToUpper()); 
             Console.WriteLine();
         }
         public void Writeline(string v)
@@ -231,17 +252,11 @@ namespace Rememberall
         }
         public void LoginScreenArt()
         {
-            Console.ForegroundColor = ConsoleColor.DarkBlue;
-            Console.WriteLine(@"______                              _                    _ _ 
-| ___ \                            | |                  | | |
-| |_/ /___ _ __ ___   ___ _ __ ___ | |__   ___ _ __ __ _| | |
-|    // _ \ '_ ` _ \ / _ \ '_ ` _ \| '_ \ / _ \ '__/ _` | | |
-| |\ \  __/ | | | | |  __/ | | | | | |_) |  __/ | | (_| | | |
-\_| \_\___|_| |_| |_|\___|_| |_| |_|_.__/ \___|_|  \__,_|_|_|");
 
         }
         private void Write(string v)
         {
+
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write(v);
         }

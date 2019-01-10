@@ -7,6 +7,9 @@ namespace Rememberall
     {
         static void Main(string[] args)
         {
+
+
+
             Users.CurrentUserId = 1;
             var engine = new Engine();
             engine.Run();
