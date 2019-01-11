@@ -18,7 +18,7 @@ namespace Rememberall
         DataAccess _dataAccess = new DataAccess();
         internal void Run()
         {
-            //Startup();
+            Startup();
             LoginScreen();
         }
 
@@ -164,11 +164,13 @@ namespace Rememberall
             }
             if (command == ConsoleKey.E)
             {
-                Login();
+                LoginScreen();
             }
             if (command == ConsoleKey.F)
             {
+                Users.CurrentUserId = null;
                 LoginScreen();
+                
             }
         }
 
