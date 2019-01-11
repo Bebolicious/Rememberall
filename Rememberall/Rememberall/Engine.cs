@@ -323,8 +323,10 @@ namespace Rememberall
             ConsoleKey command = Console.ReadKey(true).Key;
             if (command == ConsoleKey.A)
             {
+                Console.ForegroundColor = ConsoleColor.White;
                 Header($"{Cu.Username}'s Activities");
-                Console.WriteLine("Name your activity");
+                ShowUserActivity();
+                Writeline("Name your activity");
                 string newActivity = Console.ReadLine();
                 int acktivity = _dataAccess.AddUserActivity(newActivity);
 
@@ -342,7 +344,7 @@ namespace Rememberall
                     SetNewActivityAlarm(acktivity, newDateTime);
                 else
                 {
-                    MainMenu();
+                    ManageActivities();
                 }
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("\nDin aktivitet har sparats");
@@ -353,15 +355,16 @@ namespace Rememberall
             if (command == ConsoleKey.B)
             {
                 Header($"{Cu.Username}'s Activities");
+                ShowUserActivity();
                 Console.WriteLine("Which activity do you want do edit? Choose from above");
 
                 int rownumber = int.Parse(Console.ReadLine());
                 int activityId = rowdic[rownumber];
                 Activities activity = _dataAccess.GetUserActivitiesById(activityId);
 
-                Console.WriteLine("Rename");
+                Writeline("Rename: ");
                 string newName = Console.ReadLine();
-                Console.WriteLine("Update time");
+                Writeline("Update time: ");
                 DateTime newDate = DateTime.Parse(Console.ReadLine());
                 activity.Activityname = newName;
                 activity.Date = newDate;
@@ -374,7 +377,8 @@ namespace Rememberall
             if (command == ConsoleKey.C)
             {
                 Header($"{Cu.Username}'s Activities");
-                Console.WriteLine("Which activity do you want to delete? Choose from above");
+                ShowUserActivity();
+                Writeline("Which activity do you want to delete? Choose from above");
                 int rownumber = int.Parse(Console.ReadLine());
                 int activityId = rowdic[rownumber];
                // int activityId = int.Parse(Console.ReadLine());
@@ -440,7 +444,7 @@ namespace Rememberall
                 rowdic.Add(rownumber, item.Id);
                
                 //Console.WriteLine($"{rownumber.ToString().PadRight(10)}{item.Activityname.PadRight(40)}{item.Date}");
-                Console.WriteLine(rownumber.ToString().PadRight(5) + item.Activityname.PadRight(30) + item.Date.DayOfWeek.ToString().PadRight(8) + item.Date.Day.ToString() + "/" + item.Date.Month.ToString().PadRight(10) + item.Date.Hour.ToString() + ":" + item.Date.Minute.ToString() );
+                Console.WriteLine(rownumber.ToString().PadRight(5) + item.Activityname.PadRight(30) + item.Date.DayOfWeek.ToString().PadRight(10) + item.Date.Day.ToString() + "/" + item.Date.Month.ToString().PadRight(10) + item.Date.Hour.ToString() + ":" + item.Date.Minute.ToString() );
                 rownumber++;
             }
             Console.WriteLine();
