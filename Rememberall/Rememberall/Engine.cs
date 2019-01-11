@@ -349,6 +349,7 @@ namespace Rememberall
             if (command == ConsoleKey.B)
             {
                 Header($"{Cu.Username}'s Activities");
+            
                 Console.WriteLine("Which activity do you want do edit? Choose from above");
 
                 int rownumber = int.Parse(Console.ReadLine());
@@ -364,9 +365,10 @@ namespace Rememberall
 
                 _dataAccess.UpdateActivityName(activity);
                 _dataAccess.UpdateActivityDate(activity);
-                MainMenu();
+                ManageActivities();
+
             }
-            
+
             if (command == ConsoleKey.C)
             {
                 Header($"{Cu.Username}'s Activities");
@@ -381,7 +383,8 @@ namespace Rememberall
                 Console.WriteLine("Your activity has been deleted");
                 Thread.Sleep(1000);
                 Console.ResetColor();
-                MainMenu();
+                ManageActivities();
+
             }
             if (command == ConsoleKey.D)
             {
