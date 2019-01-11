@@ -106,7 +106,7 @@ namespace Rememberall
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("User has been created");
                 Console.ForegroundColor = ConsoleColor.White;
-                Console.ReadKey();
+                Thread.Sleep(2000);
                 LoginScreen();
 
             }
@@ -136,9 +136,9 @@ namespace Rememberall
             Console.WriteLine("What do you want to do?");
             Console.WriteLine();
 
-            Writeline("A) Calendar");
-            Writeline("B) Activities");
-            Writeline("C) Alarms\n");
+            Writeline("A) Show my Calendar");
+            Writeline("B) Show my Activities");
+            Writeline("C) Show my Alarms\n");
             Console.Write("D) User settings\n\n");
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("E) Change user\nF) Log out");
@@ -171,9 +171,6 @@ namespace Rememberall
                 LoginScreen();
             }
         }
-
-
-
 
 
         private void EditUserAlarms()
@@ -246,7 +243,6 @@ namespace Rememberall
             string time = Console.ReadLine();
             int TempId = Users.CurrentUserId.Value;
             DataAccess.SetAlarmDate(alarmdate, alarmname, time, TempId);
-        
     }
 
 
@@ -271,7 +267,6 @@ namespace Rememberall
                 alarmname = "Alarm";
             }
             Header("Set new alarm");
-
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write("Do you want the alarm for the same date as your activity?");
             Writeline("\nA) Yes\nB) No, i want to set the alarm for another date.");
@@ -318,6 +313,7 @@ namespace Rememberall
             Writeline("A) Add activity");
             Writeline("B) Edit activity");
             Writeline("C) Delete activity");
+            Console.WriteLine();
             Writeline("D) Go back");
 
             ConsoleKey command = Console.ReadKey(true).Key;
@@ -371,9 +367,10 @@ namespace Rememberall
 
                 _dataAccess.UpdateActivityName(activity);
                 _dataAccess.UpdateActivityDate(activity);
-                MainMenu();
+                ManageActivities();
+
             }
-            
+
             if (command == ConsoleKey.C)
             {
                 Header($"{Cu.Username}'s Activities");
@@ -384,9 +381,13 @@ namespace Rememberall
                // int activityId = int.Parse(Console.ReadLine());
                 Activities deleteActivity = _dataAccess.GetUserActivitiesById(activityId);
                 _dataAccess.DeleteActivity(deleteActivity);
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Your activity has been deleted");
-                Thread.Sleep(2000);
-                MainMenu();
+                Thread.Sleep(1000);
+                Console.ResetColor();
+                ManageActivities();
+
             }
             if (command == ConsoleKey.D)
             {
@@ -444,20 +445,11 @@ namespace Rememberall
                 rowdic.Add(rownumber, item.Id);
                
                 //Console.WriteLine($"{rownumber.ToString().PadRight(10)}{item.Activityname.PadRight(40)}{item.Date}");
-                Console.WriteLine(rownumber.ToString().PadRight(5) + item.Activityname.PadRight(30) + item.Date.DayOfWeek.ToString().PadRight(10) + item.Date.Day.ToString() + "/" + item.Date.Month.ToString().PadRight(10) + item.Date.Hour.ToString() + ":" + item.Date.Minute.ToString() );
+                Console.WriteLine(rownumber.ToString().PadRight(5) + item.Activityname.PadRight(30) + item.Date.DayOfWeek.ToString().PadRight(8) + item.Date.Day.ToString() + "/" + item.Date.Month.ToString().PadRight(10) + item.Date.Hour.ToString() + ":" + item.Date.Minute.ToString() );
                 rownumber++;
             }
             Console.WriteLine();
             Console.WriteLine();
-
-            //foreach (Alarms alarm in Alarmlist)
-            //{
-            //    Console.ForegroundColor = ConsoleColor.DarkYellow;
-            //    Console.WriteLine(alarm.Alarmname.PadRight(20) + alarm.Alarmtime.Hours.ToString() + ":" + alarm.Alarmtime.Minutes.ToString().PadRight(20) + alarm.DateId.DayOfWeek.ToString().PadRight(20) + alarm.DateId.Day.ToString() + "/" + alarm.DateId.Month.ToString());
-            //}
-
-
-
 
             return rowdic;
         }
@@ -618,7 +610,6 @@ namespace Rememberall
             int CurrentYear = DateTime.Today.Year;
             int CurrentMonth = DateTime.Today.Month +v; //  int v + v-------------------Ändra här för att ändra månad +1= februari, +2=mars etc.
             int CurrentDay = DateTime.Today.Day;
-            
             
             DisplayCalendar(CurrentYear, CurrentMonth, CurrentDay);
         }

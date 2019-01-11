@@ -10,3 +10,11 @@ Visa varje users kalender, printa ut den
 Lägga till alarm
 Göra klart aktiviter, lägga till personer på samma aktivitet.
 Göra det sista på login
+
+Torsdagen:
+
+
+Fredagen:
+Förmiddagen, göra klart det sista på alarm, login och aktiviter. Få till print av alla kalendermånaderna,
+
+Eftermiddagen: Snygga till allt, testa att göra ny användare och använda alla funktioner för att hitta buggar och se till att allt funkar som det ska.
