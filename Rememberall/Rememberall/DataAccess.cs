@@ -184,9 +184,41 @@ namespace Rememberall
             }
         }
 
-        internal static void SetAlarmDate(DateTime alarmdate, string alarmname, string alarmtime)
+        public List<Alarms> GetAllAlarms(int UserId)
         {
-            var sql = @"INSERT INTO Alarms(DateId, Alarmname, Alarmtime) VALUES (@DateId, @Alarmname, @Alarmtime)";
+            var sql = @"SELECT Alarmname, Alarmtime, DateId
+                        FROM Alarms
+                        WHERE UserId=@UserId";
+
+            using (SqlConnection connection = new SqlConnection(conString))
+            using (SqlCommand command = new SqlCommand(sql, connection))
+            {
+                connection.Open();
+                command.Parameters.Add(new SqlParameter("UserId", UserId));
+
+                SqlDataReader reader = command.ExecuteReader();
+
+                var list = new List<Alarms>();
+
+                while (reader.Read())
+                {
+                    var alarm = new Alarms                    //Ger exception
+                    {
+                        Alarmname = reader.GetSqlString(0).Value,
+                        Alarmtime = reader.GetTimeSpan(1),
+                        DateId = reader.GetSqlDateTime(2).Value
+                    };
+                    list.Add(alarm);
+                }
+
+                return list;
+
+            }
+        }
+
+        internal static void SetAlarmDate(DateTime alarmdate, string alarmname, string alarmtime, int UserId)
+        {
+            var sql = @"INSERT INTO Alarms(DateId, Alarmname, Alarmtime, UserId) VALUES (@DateId, @Alarmname, @Alarmtime, @UserId)";
 
             using (SqlConnection connection = new SqlConnection(conString))
             using (SqlCommand command = new SqlCommand(sql, connection))
@@ -195,14 +227,34 @@ namespace Rememberall
                 command.Parameters.Add(new SqlParameter("DateId", alarmdate));
                 command.Parameters.Add(new SqlParameter("Alarmname", alarmname));
                 command.Parameters.Add(new SqlParameter("Alarmtime", alarmtime));
+                command.Parameters.Add(new SqlParameter("UserId", UserId));
 
 
                 command.ExecuteNonQuery();
 
             }
-
-
         }
+
+        internal static void SetActivityAlarmDate(DateTime alarmdate, string alarmname, string alarmtime, int UserId, int activityId)
+        {
+            var sql = @"INSERT INTO Alarms(DateId, Alarmname, Alarmtime, UserId, ActivityId) VALUES (@DateId, @Alarmname, @Alarmtime, @UserId, @ActivityId)";
+
+            using (SqlConnection connection = new SqlConnection(conString))
+            using (SqlCommand command = new SqlCommand(sql, connection))
+            {
+                connection.Open();
+                command.Parameters.Add(new SqlParameter("DateId", alarmdate));
+                command.Parameters.Add(new SqlParameter("Alarmname", alarmname));
+                command.Parameters.Add(new SqlParameter("Alarmtime", alarmtime));
+                command.Parameters.Add(new SqlParameter("UserId", UserId));
+                command.Parameters.Add(new SqlParameter("ActivityId", activityId));
+
+
+                command.ExecuteNonQuery();
+
+            }
+        }
+
 
         internal void AddManyActivities(int acktivity, DateTime newDateTime, int? currentUserId)
         {
@@ -221,10 +273,7 @@ namespace Rememberall
             }
         }
 
-        //internal List<Activities> GetUserAlarms(int UserId)
-        //{
-            
-        //}
+
 
         internal void DeleteActivity(Activities deleteActivity)
         {

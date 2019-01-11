@@ -31,7 +31,7 @@ namespace Rememberall
             Console.WriteLine();
             Console.WriteLine();
             Header1("Rememberall", "Version 1.8");
-
+            
             ConsoleKey command = Console.ReadKey(true).Key;
             if (command == ConsoleKey.A)
                 Login();
@@ -178,6 +178,7 @@ namespace Rememberall
             var Cu = DataAccess.GetCurrentUserById(TempId);
             DateTime Currenttime = DateTime.UtcNow;
             Header($"{Cu.Username}'s Alarms");
+            ShowAllAlarms();
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write("What do you want to do?");
             Console.ForegroundColor = ConsoleColor.White;
@@ -195,6 +196,22 @@ namespace Rememberall
                 MainMenu();
 
             EditUserAlarms();
+        }
+
+        public void ShowAllAlarms()
+        {
+            int TempId = Users.CurrentUserId.Value;
+            var _dataAccess = new DataAccess();
+            List<Alarms> Alarmlist = _dataAccess.GetAllAlarms(TempId);
+            Console.WriteLine("Alarm Name:".PadRight(20) + "Alarm Time".PadRight(23) + "Day".PadRight(20) + "Date");
+            foreach  (Alarms alarm in Alarmlist)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                Console.WriteLine(alarm.Alarmname.PadRight(20) + alarm.Alarmtime.Hours.ToString() +":"+ alarm.Alarmtime.Minutes.ToString().PadRight(20) + alarm.DateId.DayOfWeek.ToString().PadRight(20) + alarm.DateId.Day.ToString() +"/"+ alarm.DateId.Month.ToString());
+            }
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
         }
 
         private void SetNewAlarm()
@@ -223,9 +240,46 @@ namespace Rememberall
             DateTime alarmdate = DateTime.Parse(Console.ReadLine());
             Write("Set time for the alarm: ");
             string time = Console.ReadLine();
-            DataAccess.SetAlarmDate(alarmdate, alarmname, time);
+            int TempId = Users.CurrentUserId.Value;
+            DataAccess.SetAlarmDate(alarmdate, alarmname, time, TempId);
         
     }
+
+
+        private void SetNewActivityAlarm(int activityId)
+        {
+
+            Header("Set new alarm");
+            Writeline("Do you want to name your alarm?");
+            Writeline("A) Yes");
+            Writeline("B) No");
+            ConsoleKey alarmcommand2 = Console.ReadKey(true).Key;
+
+            string alarmname;
+            if (alarmcommand2 == ConsoleKey.A)
+            {
+                Console.ForegroundColor = ConsoleColor.White;
+                Write("Name your alarm: ");
+                alarmname = Console.ReadLine();
+            }
+            else
+            {
+                alarmname = "Alarm";
+            }
+            Header("Set new alarm");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("Set date: ");
+            DateTime alarmdate = DateTime.Parse(Console.ReadLine());
+            Write("Set time for the alarm: ");
+            string time = Console.ReadLine();
+            int TempId = Users.CurrentUserId.Value;
+            DataAccess.SetActivityAlarmDate(alarmdate, alarmname, time, TempId, activityId);
+
+        }
+
+
+
+
 
         //private Dictionary<int, int> ShowAllAlarms()
         //{
@@ -283,15 +337,12 @@ namespace Rememberall
                 Console.WriteLine("B) No");
                 ConsoleKey alarmcommand = Console.ReadKey(true).Key;
                 if (alarmcommand == ConsoleKey.A)
-                    SetNewAlarm();
+                    SetNewActivityAlarm(acktivity);
                 else
                 {
-
                     MainMenu();
                 }
-
-
-                    Console.ForegroundColor = ConsoleColor.Green;
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Din aktivitet har sparats");
                 Console.ForegroundColor = ConsoleColor.White;
                 Thread.Sleep(1000);
