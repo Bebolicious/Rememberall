@@ -387,8 +387,6 @@ namespace Rememberall
             }
 
 
-
-
         }
 
         private void ShowUserCalendar()
@@ -428,13 +426,31 @@ namespace Rememberall
 
             int rownumber = 1;
 
+            Console.WriteLine(" ".PadRight(5) + "Activityname".PadRight(30) + "Date".PadRight(20) + "Activity Start".PadRight(10));
+            Console.WriteLine();
+
             foreach (Activities item in list)
             {
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+
                 rowdic.Add(rownumber, item.Id);
-               // Console.WriteLine("(" + rownumber + ")     " +  item.Activityname + "     " + item.Date);
-                Console.WriteLine($"{rownumber.ToString().PadRight(10)}{item.Activityname.PadRight(40)}{item.Date}");
+               
+                //Console.WriteLine($"{rownumber.ToString().PadRight(10)}{item.Activityname.PadRight(40)}{item.Date}");
+                Console.WriteLine(rownumber.ToString().PadRight(5) + item.Activityname.PadRight(30) + item.Date.DayOfWeek.ToString().PadRight(8) + item.Date.Day.ToString() + "/" + item.Date.Month.ToString().PadRight(10) + item.Date.Hour.ToString() + ":" + item.Date.Minute.ToString() );
                 rownumber++;
             }
+            Console.WriteLine();
+            Console.WriteLine();
+
+            //foreach (Alarms alarm in Alarmlist)
+            //{
+            //    Console.ForegroundColor = ConsoleColor.DarkYellow;
+            //    Console.WriteLine(alarm.Alarmname.PadRight(20) + alarm.Alarmtime.Hours.ToString() + ":" + alarm.Alarmtime.Minutes.ToString().PadRight(20) + alarm.DateId.DayOfWeek.ToString().PadRight(20) + alarm.DateId.Day.ToString() + "/" + alarm.DateId.Month.ToString());
+            //}
+
+
+
+
             return rowdic;
         }
 
