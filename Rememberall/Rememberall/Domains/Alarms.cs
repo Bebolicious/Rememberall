@@ -8,7 +8,8 @@ namespace Rememberall.Domains
     {
         public int Id { get; set; }
         public string Alarmname { get; set; }
-        public DateTime Alarmtime { get; set; }
+        public DateTime DateId { get; set; }
+        public TimeSpan Alarmtime { get; set; }
 
     }
 }
