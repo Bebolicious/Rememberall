@@ -18,7 +18,7 @@ namespace Rememberall
         DataAccess _dataAccess = new DataAccess();
         internal void Run()
         {
-            
+            Startup();
             LoginScreen();
         }
 
@@ -52,15 +52,20 @@ namespace Rememberall
 
         private void Login()
         {
-            Header("Log In");
+            Header("Log In\nPress 'c' to go back");
             Write("Enter Username:");
+           
 
             string username = Console.ReadLine();
+            if (username == "C")
+            {
+                LoginScreen();
+            }
             Write("Enter Password:");
             string pass = SetHiddenPass();
 
             string Hashpass = HashPass(pass);
-
+            
 
             bool Username = DataAccess.MatchUsername(username, Hashpass);
 
@@ -277,27 +282,6 @@ namespace Rememberall
 
         }
 
-
-
-
-
-        //private Dictionary<int, int> ShowAllAlarms()
-        //{
-        //    int TempId = Users.CurrentUserId.Value;
-        //    var Cu = DataAccess.GetCurrentUserById(TempId);
-        //    int rows = 1;
-        //    List<Alarms> list = DataAccess.GetUserAlarms(Cu.Id);
-        //    Dictionary<int, int> Alarmdictionary = new Dictionary<int, int>();
-
-        //        foreach (Alarms item in list)
-        //        {
-        //        Alarmdictionary.Add(rows, item.Id);
-        //            Console.WriteLine("(" + rows + ")     " + item.Alarmname + "     " + item.Alarmtime);
-        //        }
-        //        return Alarmdictionary;
-
-        //}
-
         private void ManageActivities()
         {
             int TempId = Users.CurrentUserId.Value;
@@ -507,6 +491,7 @@ namespace Rememberall
 
         public static void Header1(string title, string subtitle = "")
         {
+            Console.WriteLine("\n\n\n\n\n\n\n\n\n\n");
             int windowWidth = 90 - 2;
             string titleContent = string.Format("║{0," + ((windowWidth / 2) + (title.Length / 2)) + "}{1," + (windowWidth - (windowWidth / 2) - (title.Length / 2) + 7) + "}", title, "║");
             string subtitleContent = string.Format("║{0," + ((windowWidth / 2) + (subtitle.Length / 2)) + "}{1," + (windowWidth - (windowWidth / 2) - (subtitle.Length / 2) + 7) + "}", subtitle, "║");
@@ -704,8 +689,50 @@ namespace Rememberall
             string month = info.MonthNames[theMonth - 1];
             return month;
         }
-        
-        
+
+        public void Startup()
+        {
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            string text = (@"
+██▀███  ▓█████  ███▄ ▄███▓▓█████  ███▄ ▄███▓ ▄▄▄▄   ▓█████  ██▀███   ▄▄▄       ██▓     ██▓    
+▓██ ▒ ██▒▓█   ▀ ▓██▒▀█▀ ██▒▓█   ▀ ▓██▒▀█▀ ██▒▓█████▄ ▓█   ▀ ▓██ ▒ ██▒▒████▄    ▓██▒    ▓██▒    
+▓██ ░▄█ ▒▒███   ▓██    ▓██░▒███   ▓██    ▓██░▒██▒ ▄██▒███   ▓██ ░▄█ ▒▒██  ▀█▄  ▒██░    ▒██░    
+▒██▀▀█▄  ▒▓█  ▄ ▒██    ▒██ ▒▓█  ▄ ▒██    ▒██ ▒██░█▀  ▒▓█  ▄ ▒██▀▀█▄  ░██▄▄▄▄██ ▒██░    ▒██░    
+░██▓ ▒██▒░▒████▒▒██▒   ░██▒░▒████▒▒██▒   ░██▒░▓█  ▀█▓░▒████▒░██▓ ▒██▒ ▓█   ▓██▒░██████▒░██████▒
+░ ▒▓ ░▒▓░░░ ▒░ ░░ ▒░   ░  ░░░ ▒░ ░░ ▒░   ░  ░░▒▓███▀▒░░ ▒░ ░░ ▒▓ ░▒▓░ ▒▒   ▓▒█░░ ▒░▓  ░░ ▒░▓  ░
+  ░▒ ░ ▒░ ░ ░  ░░  ░      ░ ░ ░  ░░  ░      ░▒░▒   ░  ░ ░  ░  ░▒ ░ ▒░  ▒   ▒▒ ░░ ░ ▒  ░░ ░ ▒  ░
+  ░░   ░    ░   ░      ░      ░   ░      ░    ░    ░    ░     ░░   ░   ░   ▒     ░ ░     ░ ░   
+   ░        ░  ░       ░      ░  ░       ░    ░         ░  ░   ░           ░  ░    ░  ░    ░  ░
+                                                   ░                                           ");
+            string loading = (@"█████████████████████████████████████████████████████████");
+
+            Console.WriteLine("Loading: ");
+
+
+            foreach (char b in loading)
+            {
+                Console.Write(b);
+                Thread.Sleep(90);
+            }
+            Console.Clear();
+
+
+
+
+            foreach (char c in text)
+
+            {
+
+                Console.Write(c);
+
+                Thread.Sleep(2);
+
+            }
+
+
+        }
+
     }
     
     }
