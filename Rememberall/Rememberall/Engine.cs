@@ -274,7 +274,7 @@ namespace Rememberall
 
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write("Do you want the alarm for the same date as your activity?");
-            Writeline("A) Yes\nB) No, i want to set the alarm for another date.");
+            Writeline("\nA) Yes\nB) No, i want to set the alarm for another date.");
             ConsoleKey alarmcommand3 = Console.ReadKey(true).Key;
 
             if (alarmcommand3 == ConsoleKey.A)
@@ -323,6 +323,7 @@ namespace Rememberall
             ConsoleKey command = Console.ReadKey(true).Key;
             if (command == ConsoleKey.A)
             {
+                Header($"{Cu.Username}'s Activities");
                 Console.WriteLine("Name your activity");
                 string newActivity = Console.ReadLine();
                 int acktivity = _dataAccess.AddUserActivity(newActivity);
@@ -332,7 +333,7 @@ namespace Rememberall
                 DateTime newDateTime = DateTime.Parse(Console.ReadLine());
 
                 _dataAccess.AddManyActivities(acktivity, newDateTime, Users.CurrentUserId);
-
+                Header($"{Cu.Username}'s Activities");
                 Console.WriteLine("Do you want to set an alarm for this activity?");
                 Console.WriteLine("A) Yes");
                 Console.WriteLine("B) No");
@@ -344,13 +345,14 @@ namespace Rememberall
                     MainMenu();
                 }
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("Din aktivitet har sparats");
+                Console.WriteLine("\nDin aktivitet har sparats");
                 Console.ForegroundColor = ConsoleColor.White;
                 Thread.Sleep(1000);
-                MainMenu();
+                ManageActivities();
             }
             if (command == ConsoleKey.B)
             {
+                Header($"{Cu.Username}'s Activities");
                 Console.WriteLine("Which activity do you want do edit? Choose from above");
 
                 int rownumber = int.Parse(Console.ReadLine());
@@ -371,6 +373,7 @@ namespace Rememberall
             
             if (command == ConsoleKey.C)
             {
+                Header($"{Cu.Username}'s Activities");
                 Console.WriteLine("Which activity do you want to delete? Choose from above");
                 int rownumber = int.Parse(Console.ReadLine());
                 int activityId = rowdic[rownumber];
