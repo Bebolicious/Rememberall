@@ -303,7 +303,6 @@ namespace Rememberall
 
                 int rownumber = int.Parse(Console.ReadLine());
                 int activityId = rowdic[rownumber];
-                //int activityId = int.Parse(Console.ReadLine());
                 Activities activity = _dataAccess.GetUserActivitiesById(activityId);
 
                 Console.WriteLine("Rename");
@@ -343,11 +342,6 @@ namespace Rememberall
 
         private void ShowUserCalendar()
         {
-            //GetUserCalendar(); //Printar ut calendern samt visar dagar som användaren har aktiviter på(?)
-            //PrintUserCalender(); //Printar kalendern veckovis eller månadsvis, markerar dagens datum
-            // ShowUserActivity();
-
-            //FUNKAR, Men kan bli många if-satser. Fortsätt på fredag.
 
             Header($"{Current.UserName}s Calendar");
 
@@ -371,9 +365,7 @@ namespace Rememberall
             if (command == ConsoleKey.Escape )
             {
                 MainMenu();
-
             }
-
         }
 
 
@@ -545,8 +537,6 @@ namespace Rememberall
             Console.WriteLine("Month must be a number between 1 and 12.");
         }
 
-        // the guts (overloaded methods)
-        // default to the current month
         private static void DisplayCalendar(int v)
         {
             int CurrentYear = DateTime.Today.Year;
@@ -564,31 +554,23 @@ namespace Rememberall
 
         private static void DisplayCalendar(int TheYear, int TheMonth, int TheDay)
         {
-            // default to the first of the month
+            
             Int16 FirstDayOfMonth = 1;
             Int32 NumberOfDaysInMonth = DateTime.DaysInMonth(TheYear, TheMonth);
             DateTime FullDateToUse = new DateTime(TheYear, TheMonth, FirstDayOfMonth);
-
-            // this is the day of week we're gonna start with (0-6)
+            
             Int32 StartDay = Convert.ToInt32(FullDateToUse.DayOfWeek);
 
-            // this indicates how much padding we need for
-            // the first day of the month.
             Int32 NumberOfTabs = StartDay;
-
-            // this will display the month name and
-            // the headings for the days of the week.
+           
             DisplayHeader(GetMonthName(TheMonth), TheYear.ToString(), true);
-
-            // accumulator used so we'll know when to wrap 
-            // to the next week.
+            
             //-------------------------------------------------
             int DayOfWeek = StartDay;
             for (int Counter = 2; Counter <= NumberOfDaysInMonth; Counter++)// Ändrade till 2 ist för 1
             {
                 string DayString = "";
-                // if it's the first day of the month, we'll need
-                // padding so we start on the correct "day"
+             
                 if (Counter == 2) // Ändrade till 2 ist för 1
                 {
                     String Padding = new String('\t', NumberOfTabs);
@@ -604,30 +586,25 @@ namespace Rememberall
                 {
                     DayString = String.Concat("*", DayString);
                 }
-                
              
-
-                // start a new line only if this isn't the first day
                 if (DayOfWeek % 7 == 0 && Counter > 1)
                 {
                     DayString = String.Concat("\n", Counter.ToString());
                 }
 
-                // separate each day with a tab
                 Console.Write("{0}\t", DayString);
 
                 DayOfWeek++;
             }
-            // blank line after the calendar has been printed
+           
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine();
         }
         // ÄNDRA HÄR---------------------------------------------------
-        // header for the calendar display
+        
         private static void DisplayHeader(string theMonthName, string theYear, bool ShowCurrentDate)
         {
-            // the Month, year
             string Header = String.Concat(theMonthName, ", ");
             Header = String.Concat(Header, theYear);
             String Days = "M\tT\tW\tTh\tF\tS\tS"; // flttade om här-
@@ -648,7 +625,6 @@ namespace Rememberall
 
         private static string GetMonthName(int theMonth)
         {
-
             DateTimeFormatInfo info = new DateTimeFormatInfo();
             string month = info.MonthNames[theMonth - 1];
             return month;
