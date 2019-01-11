@@ -14,11 +14,11 @@ namespace Rememberall
     class Engine
     {
 
-        public static System.Drawing.Point Position { get; set; }
+
         DataAccess _dataAccess = new DataAccess();
         internal void Run()
         {
-            Startup();
+            //Startup();
             LoginScreen();
         }
 
@@ -52,17 +52,16 @@ namespace Rememberall
 
         private void Login()
         {
-            Header("Log In\nPress 'c' to go back");
+            Header("Log In\nPress 'Enter' Twice t");
             Write("Enter Username:");
-           
-
             string username = Console.ReadLine();
-            if (username == "C")
+            Write("Enter Password:");
+            string pass = SetHiddenPass();
+
+            if (username == "" && pass == "")
             {
                 LoginScreen();
             }
-            Write("Enter Password:");
-            string pass = SetHiddenPass();
 
             string Hashpass = HashPass(pass);
             
@@ -247,7 +246,7 @@ namespace Rememberall
     }
 
 
-        private void SetNewActivityAlarm(int activityId)
+        private void SetNewActivityAlarm(int activityId, DateTime Newdate)
         {
 
             Header("Set new alarm");
@@ -267,15 +266,32 @@ namespace Rememberall
             {
                 alarmname = "Alarm";
             }
-            Header("Set new alarm"); 
+            Header("Set new alarm");
             Console.ForegroundColor = ConsoleColor.White;
-            Console.Write("Set date: ");
-            DateTime alarmdate = DateTime.Parse(Console.ReadLine());
-            Write("Set time for the alarm: ");
-            string time = Console.ReadLine();
-            int TempId = Users.CurrentUserId.Value;
-            DataAccess.SetActivityAlarmDate(alarmdate, alarmname, time, TempId, activityId);
+            Console.Write("Do you want the alarm for the same date as your activity?");
+            Writeline("\nA) Yes\nB) No, i want to set the alarm for another date.");
+            ConsoleKey alarmcommand3 = Console.ReadKey(true).Key;
 
+            if (alarmcommand3 == ConsoleKey.A)
+            {
+                Header("Set new alarm");
+                DateTime alarmdate = Newdate;
+                Write("Set time for the alarm: ");
+                string time = Console.ReadLine();
+                int TempId = Users.CurrentUserId.Value;
+                DataAccess.SetActivityAlarmDate2(alarmdate, alarmname, time, TempId, activityId);
+
+            }
+            else
+            {
+                Header("Set new alarm");
+                Write("Set a new date for your alarm (YYYY/MM/DD): ");
+                DateTime alarmdate = DateTime.Parse(Console.ReadLine());
+                Write("Set time for the alarm:");
+                string time = Console.ReadLine();
+                int TempId = Users.CurrentUserId.Value;
+                DataAccess.SetActivityAlarmDate2(alarmdate, alarmname, time, TempId, activityId);
+            }
         }
 
         private void ManageActivities()
@@ -303,6 +319,7 @@ namespace Rememberall
             ConsoleKey command = Console.ReadKey(true).Key;
             if (command == ConsoleKey.A)
             {
+                Header($"{Cu.Username}'s Activities");
                 Console.WriteLine("Name your activity");
                 string newActivity = Console.ReadLine();
                 int acktivity = _dataAccess.AddUserActivity(newActivity);
@@ -312,25 +329,26 @@ namespace Rememberall
                 DateTime newDateTime = DateTime.Parse(Console.ReadLine());
 
                 _dataAccess.AddManyActivities(acktivity, newDateTime, Users.CurrentUserId);
-
+                Header($"{Cu.Username}'s Activities");
                 Console.WriteLine("Do you want to set an alarm for this activity?");
                 Console.WriteLine("A) Yes");
                 Console.WriteLine("B) No");
                 ConsoleKey alarmcommand = Console.ReadKey(true).Key;
                 if (alarmcommand == ConsoleKey.A)
-                    SetNewActivityAlarm(acktivity);
+                    SetNewActivityAlarm(acktivity, newDateTime);
                 else
                 {
-                    
+                    MainMenu();
+                }
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("Din aktivitet har sparats");
+                Console.WriteLine("\nDin aktivitet har sparats");
                 Console.ForegroundColor = ConsoleColor.White;
                 Thread.Sleep(1000);
-                MainMenu();
-                }
+                ManageActivities();
             }
             if (command == ConsoleKey.B)
             {
+                Header($"{Cu.Username}'s Activities");
                 Console.WriteLine("Which activity do you want do edit? Choose from above");
 
                 int rownumber = int.Parse(Console.ReadLine());
@@ -351,6 +369,7 @@ namespace Rememberall
             
             if (command == ConsoleKey.C)
             {
+                Header($"{Cu.Username}'s Activities");
                 Console.WriteLine("Which activity do you want to delete? Choose from above");
                 int rownumber = int.Parse(Console.ReadLine());
                 int activityId = rowdic[rownumber];
@@ -488,7 +507,7 @@ namespace Rememberall
 
         public static void Header1(string title, string subtitle = "")
         {
-            Console.WriteLine("\n\n\n\n\n\n\n\n\n\n");
+            Console.WriteLine("\n\n\n\n\n\n\n");
             int windowWidth = 90 - 2;
             string titleContent = string.Format("║{0," + ((windowWidth / 2) + (title.Length / 2)) + "}{1," + (windowWidth - (windowWidth / 2) - (title.Length / 2) + 7) + "}", title, "║");
             string subtitleContent = string.Format("║{0," + ((windowWidth / 2) + (subtitle.Length / 2)) + "}{1," + (windowWidth - (windowWidth / 2) - (subtitle.Length / 2) + 7) + "}", subtitle, "║");
