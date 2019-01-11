@@ -126,8 +126,8 @@ namespace Rememberall
 
             var Cu = DataAccess.GetCurrentUserById(TempId);
       Header($"Welcome {Cu.Username}");
-
-            DisplayCalendar();
+            int v = 0;
+            DisplayCalendar(v);
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("What do you want to do?");
             Console.WriteLine();
@@ -273,7 +273,7 @@ namespace Rememberall
                 int acktivity = _dataAccess.AddUserActivity(newActivity);
 
 
-                Console.WriteLine("Add a date and time for the activity(YYYY-MM-DD HH:MM:SS");
+                Console.WriteLine("Add a date and time for the activity(YYYY-MM-DD HH:MM)");
                 DateTime newDateTime = DateTime.Parse(Console.ReadLine());
 
                 _dataAccess.AddManyActivities(acktivity, newDateTime, Users.CurrentUserId);
@@ -348,15 +348,31 @@ namespace Rememberall
             // ShowUserActivity();
 
             //FUNKAR, Men kan bli många if-satser. Fortsätt på fredag.
-            //ConsoleKey command = Console.ReadKey(true).Key;
-            //if (command == ConsoleKey.A)
-            //{
-            //    int move = 1;
-            //displayCalendar(move);
-            //    Thread.Sleep(5000);
 
-            //}
+            Header($"{Current.UserName}s Calendar");
 
+            int move = 0;
+            DisplayCalendar(move);
+            DisplayCalendar(move + 1);
+            DisplayCalendar(move + 2);
+            DisplayCalendar(move + 3);
+            DisplayCalendar(move + 4);
+            DisplayCalendar(move + 5);
+            DisplayCalendar(move + 6);
+            DisplayCalendar(move + 7);
+            DisplayCalendar(move + 8);
+            DisplayCalendar(move + 9);
+            DisplayCalendar(move + 10);
+            DisplayCalendar(move + 11);
+
+            Console.WriteLine();
+            Console.WriteLine("Press ESC to go back");
+            ConsoleKey command = Console.ReadKey(true).Key;
+            if (command == ConsoleKey.Escape )
+            {
+                MainMenu();
+
+            }
 
         }
 
@@ -531,11 +547,13 @@ namespace Rememberall
 
         // the guts (overloaded methods)
         // default to the current month
-        private static void DisplayCalendar()
+        private static void DisplayCalendar(int v)
         {
             int CurrentYear = DateTime.Today.Year;
-            int CurrentMonth = DateTime.Today.Month; //  int v + v-------------------Ändra här för att ändra månad +1= februari, +2=mars etc.
+            int CurrentMonth = DateTime.Today.Month +v; //  int v + v-------------------Ändra här för att ändra månad +1= februari, +2=mars etc.
             int CurrentDay = DateTime.Today.Day;
+            
+            
             DisplayCalendar(CurrentYear, CurrentMonth, CurrentDay);
         }
 
@@ -582,10 +600,11 @@ namespace Rememberall
                 }
 
                 // highlight todays date (using *) ------------------- Lägga till aktivitet
-                if (TheDay != 1 && Counter == TheDay)
+                if (TheDay != 1 && Counter == TheDay && TheMonth ==1)
                 {
                     DayString = String.Concat("*", DayString);
                 }
+                
              
 
                 // start a new line only if this isn't the first day
@@ -634,6 +653,8 @@ namespace Rememberall
             string month = info.MonthNames[theMonth - 1];
             return month;
         }
-    
+        
+        
     }
+    
     }
