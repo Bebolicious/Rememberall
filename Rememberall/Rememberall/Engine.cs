@@ -13,12 +13,10 @@ namespace Rememberall
 {
     class Engine
     {
-
-
         DataAccess _dataAccess = new DataAccess();
         internal void Run()
         {
-            //Startup();
+            Startup();
             LoginScreen();
         }
 
@@ -44,9 +42,6 @@ namespace Rememberall
             {
                 LoginScreen();
             }
-
-
-
         }
 
 
@@ -82,17 +77,12 @@ namespace Rememberall
                 Console.ReadKey();
                 Login();
             }
-
-
         }
-
 
         private void CreateAccount()
         {
-
             try
             {
-
                 Header("Create new account");
                 Write("Please choose a username:");
                 string Newuser = Console.ReadLine();
@@ -108,19 +98,15 @@ namespace Rememberall
                 Console.ForegroundColor = ConsoleColor.White;
                 Thread.Sleep(2000);
                 LoginScreen();
-
             }
 
             catch (System.Data.SqlClient.SqlException)
             {
-
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Username is taken");
                 Console.ForegroundColor = ConsoleColor.White;
                 Thread.Sleep(2000);
                 CreateAccount();
-
-
             }
         }
 
@@ -172,7 +158,6 @@ namespace Rememberall
             }
         }
 
-
         private void EditUserAlarms()
         {
             int TempId = Users.CurrentUserId.Value;
@@ -217,7 +202,6 @@ namespace Rememberall
 
         private void SetNewAlarm()
         {
-
             Header("Set new alarm");
             Writeline("Do you want to name your alarm?");
             Writeline("A) Yes");
@@ -248,7 +232,6 @@ namespace Rememberall
 
         private void SetNewActivityAlarm(int activityId, DateTime Newdate)
         {
-
             Header("Set new alarm");
             Writeline("Do you want to name your alarm?");
             Writeline("A) Yes");
@@ -280,7 +263,6 @@ namespace Rememberall
                 string time = Console.ReadLine();
                 int TempId = Users.CurrentUserId.Value;
                 DataAccess.SetActivityAlarmDate2(alarmdate, alarmname, time, TempId, activityId);
-
             }
             else
             {
@@ -392,10 +374,7 @@ namespace Rememberall
             if (command == ConsoleKey.D)
             {
                 MainMenu();
-
             }
-
-
         }
 
         private void ShowUserCalendar()
@@ -425,7 +404,6 @@ namespace Rememberall
                 MainMenu();
             }
         }
-
 
         private Dictionary<int, int> ShowUserActivity()
         {
@@ -716,7 +694,6 @@ namespace Rememberall
 
             Console.WriteLine("Loading: ");
 
-
             foreach (char b in loading)
             {
                 Console.Write(b);
@@ -724,22 +701,12 @@ namespace Rememberall
             }
             Console.Clear();
 
-
-
-
             foreach (char c in text)
-
             {
-
                 Console.Write(c);
-
                 Thread.Sleep(2);
-
             }
-
-
         }
-
     }
     
     }
