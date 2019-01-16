@@ -150,11 +150,13 @@ namespace Rememberall
             }
             if (command == ConsoleKey.E)
             {
-                Login();
+                LoginScreen();
             }
             if (command == ConsoleKey.F)
             {
+                Users.CurrentUserId = null;
                 LoginScreen();
+                
             }
         }
 
