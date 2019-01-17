@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Timers;
 
@@ -16,7 +17,7 @@ namespace Rememberall
         DataAccess _dataAccess = new DataAccess();
         internal void Run()
         {
-            Startup();
+            //Startup();
             LoginScreen();
         }
 
@@ -28,7 +29,7 @@ namespace Rememberall
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine();
-            Header1("Rememberall", "Version 1.8");
+            Header1("Rememberall", "Version 2.3");
             
             ConsoleKey command = Console.ReadKey(true).Key;
             if (command == ConsoleKey.A)
@@ -47,11 +48,10 @@ namespace Rememberall
 
         private void Login()
         {
-            Header("Log In\nPress 'Enter' Twice t"); //TODO Vi vet inte riktigt vad "t" står för :)§
-            Write("Enter Username:");
+            Header("Log In\nPress 'Enter' Twice to go back."); 
+            Write("Enter Username:");                
             string username = Console.ReadLine();
-            Write("Enter Password:");
-            string pass = SetHiddenPass(); //TODO: ändra så att man åtminstone ser att man har skrivit ett tecken. Nu står markören bara still så man tror att ingenting skrivs.
+            string pass = SetHiddenPass(); 
 
             if (username == "" && pass == "")
             {
@@ -87,8 +87,7 @@ namespace Rememberall
                 Write("Please choose a username:");
                 string Newuser = Console.ReadLine();
                 Header("Create new account");
-                Write("Please choose a password:");
-                string input = SetHiddenPass(); //TODO: Ändra så att användaren kan se att markören flyttar på sig när man skriver in tecken.. 
+                string input = SetHiddenPass(); 
 
                 string Newpassword = HashPass(input); //TODO: Hade vart ballt med en regex som tvingade användaren att använda minst en siffra etc
 
@@ -103,6 +102,7 @@ namespace Rememberall
             catch (System.Data.SqlClient.SqlException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("");
                 Console.WriteLine("Username is taken");
                 Console.ForegroundColor = ConsoleColor.White;
                 Thread.Sleep(2000);
@@ -439,6 +439,7 @@ namespace Rememberall
 
         public string SetHiddenPass()
         {
+            Write("Please choose a password:");
             StringBuilder input = new StringBuilder();
             while (true)
             {
@@ -446,9 +447,89 @@ namespace Rememberall
                 if (key.Key == ConsoleKey.Enter) break;
                 if (key.Key == ConsoleKey.Backspace && input.Length > 0) input.Remove(input.Length - 1, 1);
                 else if (key.Key != ConsoleKey.Backspace) input.Append(key.KeyChar);
+                Console.Write("*");
             }
-            return input.ToString();
+
+            bool reggedpass = RegexPass(input);
+
+            if (reggedpass == false)
+            {
+                SetHiddenPass();
+                
+            }
+           
+            
+                return input.ToString();
+                
+            
+            
         }
+
+        private bool RegexPass(StringBuilder input)
+        {
+            string password = input.ToString();
+            string ErrorMessage;
+            Console.ForegroundColor = ConsoleColor.Red;
+            if (string.IsNullOrWhiteSpace(password))
+            {
+                throw new Exception("Password should not be empty");
+            }
+
+            var hasNumber = new Regex(@"[0-9]+");
+            var hasUpperChar = new Regex(@"[A-Z]+");
+            var hasMiniMaxChars = new Regex(@".{8,8}");
+            var hasLowerChar = new Regex(@"[a-z]+");
+            var hasSymbols = new Regex(@"[!@#$%^&*()_+=\[{\]};:<>|./?,-]");
+
+            if (!hasLowerChar.IsMatch(password))
+            {
+                ErrorMessage = "  - Password should contain At least one lower case letter";
+                Console.WriteLine(ErrorMessage);
+                
+                return false;
+                
+            }
+            else if (!hasUpperChar.IsMatch(password))
+            {
+                ErrorMessage = "  - Password should contain At least one upper case letter";
+                Console.WriteLine(ErrorMessage);
+                
+                return false;
+            }
+            else if (!hasMiniMaxChars.IsMatch(password))
+            {
+                ErrorMessage = "  - Password should not be less than or greater than 8 characters";
+                Console.WriteLine(ErrorMessage);
+                
+                return false;
+            }
+            else if (!hasNumber.IsMatch(password))
+            {
+                ErrorMessage = "  - Password should contain At least one numeric value";
+                Console.WriteLine(ErrorMessage);
+                
+                return false;
+            }
+
+            else if (!hasSymbols.IsMatch(password))
+            {
+                ErrorMessage = "  - Password should contain At least one special case characters";
+                Console.WriteLine(ErrorMessage);
+                
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        public void ErrorMessage(string v)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(v);
+        }
+
         static string HashPass(string input)
         {
             var hash = (new SHA1Managed()).ComputeHash(Encoding.UTF8.GetBytes(input)); //GOOD: smart kod!
