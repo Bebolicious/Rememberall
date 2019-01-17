@@ -47,7 +47,7 @@ namespace Rememberall
 
         private void Login()
         {
-            Header("Log In\nPress 'Enter' Twice t");
+            Header("Log In\nPress 'Enter' Twice t"); //TODO Vi vet inte riktigt vad "t" står för :)§
             Write("Enter Username:");
             string username = Console.ReadLine();
             Write("Enter Password:");
@@ -224,7 +224,10 @@ namespace Rememberall
             Header("Set new alarm");
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write("Set date: ");
-            DateTime alarmdate = DateTime.Parse(Console.ReadLine());
+            DateTime alarmdate = DateTime.Parse(Console.ReadLine()); //Här kan man kanske validera bättre för att undvika krasch, tex tryPArse.
+                                                                    // nu går det att skriva in årtal som redan varit också
+                                                                    //Ni kan ju kanske gör en metod som kontrollerar så datum är i rätt format
+                                                                    // 
             Write("Set time for the alarm: ");
             string time = Console.ReadLine();
             int TempId = Users.CurrentUserId.Value;
@@ -335,10 +338,10 @@ namespace Rememberall
             if (command == ConsoleKey.B)
             {
                 Header($"{Cu.Username}'s Activities");
-                ShowUserActivity();
+                ShowUserActivity(); //Snyggt att man ser sina aktiviteter direkt :)
                 Console.WriteLine("Which activity do you want do edit? Choose from above");
 
-                int rownumber = int.Parse(Console.ReadLine());
+                int rownumber = int.Parse(Console.ReadLine()); //TODO Validera genom en tryParse eller try/catch :)
                 int activityId = rowdic[rownumber];
                 Activities activity = _dataAccess.GetUserActivitiesById(activityId);
 
@@ -360,7 +363,7 @@ namespace Rememberall
                 Header($"{Cu.Username}'s Activities");
                 ShowUserActivity();
                 Writeline("Which activity do you want to delete? Choose from above");
-                int rownumber = int.Parse(Console.ReadLine());
+                int rownumber = int.Parse(Console.ReadLine()); //Validera genom tryParse eller try/catch i en while-loop etc :)
                 int activityId = rowdic[rownumber];
                // int activityId = int.Parse(Console.ReadLine());
                 Activities deleteActivity = _dataAccess.GetUserActivitiesById(activityId);
