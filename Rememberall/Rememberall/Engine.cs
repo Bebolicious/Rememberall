@@ -222,7 +222,7 @@ namespace Rememberall
                 alarmname = "Alarm"; //TODO om ni namnger alarmname direkt till "Alarm" så kan ni få bort else-satsen vilket ger mindre kod.
             }
             Header("Set new alarm");
-            Console.ForegroundColor = ConsoleColor.White;
+            Console.ForegroundColor = ConsoleColor.White;       //TODO att skapa en metod som kontrollerar att datum är i rätt format 
             Console.Write("Set date: ");
             DateTime alarmdate = DateTime.Parse(Console.ReadLine()); //Här kan man kanske validera bättre för att undvika krasch, tex tryPArse.
                                                                     // nu går det att skriva in årtal som redan varit också
@@ -520,7 +520,7 @@ namespace Rememberall
         {
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("╔═════════════════════╗");
-            Console.WriteLine("║" + v + b + c + "          ║");
+            Console.WriteLine("║" + v + b + c + "          ║");     //GOOD: Snygga "ramar" runt 
             Console.WriteLine("╚═════════════════════╝");
         }
 
