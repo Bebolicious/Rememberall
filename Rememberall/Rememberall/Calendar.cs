@@ -6,7 +6,7 @@ namespace Rememberall
 {
     public class Calendar
     {
-
+        //TODO: ta bort denna class om den inte används
 
 
     }

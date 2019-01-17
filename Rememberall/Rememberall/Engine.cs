@@ -51,7 +51,7 @@ namespace Rememberall
             Write("Enter Username:");
             string username = Console.ReadLine();
             Write("Enter Password:");
-            string pass = SetHiddenPass();
+            string pass = SetHiddenPass(); //TODO: ändra så att man åtminstone ser att man har skrivit ett tecken. Nu står markören bara still så man tror att ingenting skrivs.
 
             if (username == "" && pass == "")
             {
@@ -88,9 +88,9 @@ namespace Rememberall
                 string Newuser = Console.ReadLine();
                 Header("Create new account");
                 Write("Please choose a password:");
-                string input = SetHiddenPass();
+                string input = SetHiddenPass(); //TODO: Ändra så att användaren kan se att markören flyttar på sig när man skriver in tecken.. 
 
-                string Newpassword = HashPass(input);
+                string Newpassword = HashPass(input); //TODO: Hade vart ballt med en regex som tvingade användaren att använda minst en siffra etc
 
                 _dataAccess.CreateNewUser(Newuser, Newpassword);
                 Console.ForegroundColor = ConsoleColor.Green;
@@ -219,7 +219,7 @@ namespace Rememberall
             }
             else
             {
-                alarmname = "Alarm";
+                alarmname = "Alarm"; //TODO om ni namnger alarmname direkt till "Alarm" så kan ni få bort else-satsen vilket ger mindre kod.
             }
             Header("Set new alarm");
             Console.ForegroundColor = ConsoleColor.White;
@@ -448,26 +448,27 @@ namespace Rememberall
         }
         static string HashPass(string input)
         {
-            var hash = (new SHA1Managed()).ComputeHash(Encoding.UTF8.GetBytes(input));
+            var hash = (new SHA1Managed()).ComputeHash(Encoding.UTF8.GetBytes(input)); //GOOD: smart kod!
             return string.Join("", hash.Select(b => b.ToString("x2")).ToArray());
         }
 
         public void Header(string v)
         {
             Console.Clear();
-            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.ForegroundColor = ConsoleColor.DarkRed; 
 
             Console.WriteLine(@"
 ██▀███  ▓█████  ███▄ ▄███▓▓█████  ███▄ ▄███▓ ▄▄▄▄   ▓█████  ██▀███   ▄▄▄       ██▓     ██▓    
 ▓██ ▒ ██▒▓█   ▀ ▓██▒▀█▀ ██▒▓█   ▀ ▓██▒▀█▀ ██▒▓█████▄ ▓█   ▀ ▓██ ▒ ██▒▒████▄    ▓██▒    ▓██▒    
 ▓██ ░▄█ ▒▒███   ▓██    ▓██░▒███   ▓██    ▓██░▒██▒ ▄██▒███   ▓██ ░▄█ ▒▒██  ▀█▄  ▒██░    ▒██░    
-▒██▀▀█▄  ▒▓█  ▄ ▒██    ▒██ ▒▓█  ▄ ▒██    ▒██ ▒██░█▀  ▒▓█  ▄ ▒██▀▀█▄  ░██▄▄▄▄██ ▒██░    ▒██░    
+▒██▀▀█▄  ▒▓█  ▄ ▒██    ▒██ ▒▓█  ▄ ▒██    ▒██ ▒██░█▀  ▒▓█  ▄ ▒██▀▀█▄  ░██▄▄▄▄██ ▒██░    ▒██░         
 ░██▓ ▒██▒░▒████▒▒██▒   ░██▒░▒████▒▒██▒   ░██▒░▓█  ▀█▓░▒████▒░██▓ ▒██▒ ▓█   ▓██▒░██████▒░██████▒
 ░ ▒▓ ░▒▓░░░ ▒░ ░░ ▒░   ░  ░░░ ▒░ ░░ ▒░   ░  ░░▒▓███▀▒░░ ▒░ ░░ ▒▓ ░▒▓░ ▒▒   ▓▒█░░ ▒░▓  ░░ ▒░▓  ░
   ░▒ ░ ▒░ ░ ░  ░░  ░      ░ ░ ░  ░░  ░      ░▒░▒   ░  ░ ░  ░  ░▒ ░ ▒░  ▒   ▒▒ ░░ ░ ▒  ░░ ░ ▒  ░
   ░░   ░    ░   ░      ░      ░   ░      ░    ░    ░    ░     ░░   ░   ░   ▒     ░ ░     ░ ░   
    ░        ░  ░       ░      ░  ░       ░    ░         ░  ░   ░           ░  ░    ░  ░    ░  ░
-                                                   ░                                           ");
+                                                   ░                                           "); // TODO: Skapa en metod med denna logga som ni kallar 
+                                                                                                   // på istället för att klistra in den på flera ställen.
 
 
 
@@ -618,7 +619,7 @@ namespace Rememberall
             {
                 string DayString = "";
              
-                if (Counter == 2) // Ändrade till 2 ist för 1
+                if (Counter == 2) // 
                 {
                     String Padding = new String('\t', NumberOfTabs);
                     DayString = String.Concat(Padding, Counter.ToString());
