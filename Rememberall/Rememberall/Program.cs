@@ -10,6 +10,7 @@ namespace Rememberall
 
 
             Users.CurrentUserId = null;
+           
             var engine = new Engine();
             engine.Run();
 

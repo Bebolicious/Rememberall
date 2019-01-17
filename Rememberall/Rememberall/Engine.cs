@@ -30,7 +30,7 @@ namespace Rememberall
             Console.WriteLine();
             Console.WriteLine();
             Header1("Rememberall", "Version 2.3");
-            
+
             ConsoleKey command = Console.ReadKey(true).Key;
             if (command == ConsoleKey.A)
                 Login();
@@ -44,23 +44,21 @@ namespace Rememberall
                 LoginScreen();
             }
         }
-
-
+        
+        public int wrongpass = 0;
         private void Login()
         {
-            Header("Log In\nPress 'Enter' Twice to go back."); 
-            Write("Enter Username:");                
+            Header("Log In\nPress 'Enter' Twice to go back.");
+            Write("Enter Username:");
             string username = Console.ReadLine();
-            string pass = SetHiddenPass(); 
+            string pass = SetHiddenPassLogin();
 
             if (username == "" && pass == "")
             {
                 LoginScreen();
             }
-
-            string Hashpass = HashPass(pass);
             
-
+            string Hashpass = HashPass(pass);
             bool Username = DataAccess.MatchUsername(username, Hashpass);
 
             if (Username == true)
@@ -71,12 +69,63 @@ namespace Rememberall
             }
             else
             {
+                
+                if (wrongpass == 2)
+                {
+                    Header("Password reset");
+                    Writeline("You have entered a wrong password too many times, do you want to reset your password?");
+                    Writeline("A) Yes");
+                    Writeline("B) No");
+
+                    ConsoleKey command = Console.ReadKey(true).Key;
+                    if (command == ConsoleKey.A)
+                        PasswordReset();
+
+                    if (command == ConsoleKey.B)
+                        Login();
+                    else
+                    {
+                        Login();
+                    }
+
+                }
+                wrongpass++;
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Wrong Username or Password, try again.");
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.ReadKey();
                 Login();
+                
             }
+        }
+
+        private void PasswordReset()
+        {
+            Header("Password Reset");
+            Write("Enter your username: ");
+            Console.WriteLine();
+            string username = Console.ReadLine();
+
+            bool Username = DataAccess.ResetPassword(username);
+            if (Username == true)
+            {
+                
+                string resettedpass = SetHiddenPass();
+
+                _dataAccess.ResetUsersPassword(resettedpass);
+                Writeline("Password reset complete");
+                Thread.Sleep(400);
+                Login();
+                wrongpass = wrongpass - wrongpass;
+            }
+            else
+            {
+                Writeline("There is no such user.");
+                Thread.Sleep(500);
+                Login();
+            }
+           
+
         }
 
         private void CreateAccount()
@@ -87,11 +136,11 @@ namespace Rememberall
                 Write("Please choose a username:");
                 string Newuser = Console.ReadLine();
                 Header("Create new account");
-                string input = SetHiddenPass(); 
+                string input = SetHiddenPass();
 
-                string Newpassword = HashPass(input); //TODO: Hade vart ballt med en regex som tvingade användaren att använda minst en siffra etc
+                string Newpassword = HashPass(input); 
 
-                _dataAccess.CreateNewUser(Newuser, Newpassword);
+                _dataAccess.CreateNewUser(Newuser, Newpassword); 
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("User has been created");
                 Console.ForegroundColor = ConsoleColor.White;
@@ -115,7 +164,7 @@ namespace Rememberall
             int TempId = Users.CurrentUserId.Value;
 
             var Cu = DataAccess.GetCurrentUserById(TempId);
-      Header($"Welcome {Cu.Username}");
+            Header($"Welcome {Cu.Username}");
             int v = 0;
             DisplayCalendar(v);
             Console.ForegroundColor = ConsoleColor.White;
@@ -156,7 +205,7 @@ namespace Rememberall
             {
                 Users.CurrentUserId = null;
                 LoginScreen();
-                
+
             }
         }
 
@@ -176,7 +225,7 @@ namespace Rememberall
             Writeline("C) Go back");
 
             ConsoleKey alarmcommand = Console.ReadKey(true).Key;
-            if (alarmcommand == ConsoleKey.A)           
+            if (alarmcommand == ConsoleKey.A)
                 SetNewAlarm();
             if (alarmcommand == ConsoleKey.B)
                 MainMenu();
@@ -192,10 +241,10 @@ namespace Rememberall
             var _dataAccess = new DataAccess();
             List<Alarms> Alarmlist = _dataAccess.GetAllAlarms(TempId);
             Console.WriteLine("Alarm Name:".PadRight(20) + "Alarm Time".PadRight(23) + "Day".PadRight(20) + "Date");
-            foreach  (Alarms alarm in Alarmlist)
+            foreach (Alarms alarm in Alarmlist)
             {
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
-                Console.WriteLine(alarm.Alarmname.PadRight(20) + alarm.Alarmtime.Hours.ToString() +":"+ alarm.Alarmtime.Minutes.ToString().PadRight(20) + alarm.DateId.DayOfWeek.ToString().PadRight(20) + alarm.DateId.Day.ToString() +"/"+ alarm.DateId.Month.ToString());
+                Console.WriteLine(alarm.Alarmname.PadRight(20) + alarm.Alarmtime.Hours.ToString() + ":" + alarm.Alarmtime.Minutes.ToString().PadRight(20) + alarm.DateId.DayOfWeek.ToString().PadRight(20) + alarm.DateId.Day.ToString() + "/" + alarm.DateId.Month.ToString());
             }
             Console.WriteLine();
             Console.WriteLine();
@@ -219,20 +268,20 @@ namespace Rememberall
             }
             else
             {
-                alarmname = "Alarm"; //TODO om ni namnger alarmname direkt till "Alarm" så kan ni få bort else-satsen vilket ger mindre kod.
+                alarmname = "Alarm"; 
             }
             Header("Set new alarm");
             Console.ForegroundColor = ConsoleColor.White;       //TODO att skapa en metod som kontrollerar att datum är i rätt format 
             Console.Write("Set date: ");
             DateTime alarmdate = DateTime.Parse(Console.ReadLine()); //Här kan man kanske validera bättre för att undvika krasch, tex tryPArse.
-                                                                    // nu går det att skriva in årtal som redan varit också
-                                                                    //Ni kan ju kanske gör en metod som kontrollerar så datum är i rätt format
-                                                                    // 
+                                                                     // nu går det att skriva in årtal som redan varit också
+                                                                     //Ni kan ju kanske gör en metod som kontrollerar så datum är i rätt format
+                                                                     // 
             Write("Set time for the alarm: ");
             string time = Console.ReadLine();
             int TempId = Users.CurrentUserId.Value;
             DataAccess.SetAlarmDate(alarmdate, alarmname, time, TempId);
-    }
+        }
 
 
         private void SetNewActivityAlarm(int activityId, DateTime Newdate)
@@ -363,7 +412,7 @@ namespace Rememberall
                 ShowUserActivity(); //Snyggt att man ser sina aktiviteter direkt :)
                 Console.WriteLine("Which activity do you want do edit? Choose from above");
 
-                int rownumber = int.Parse(Console.ReadLine()); 
+                int rownumber = int.Parse(Console.ReadLine());
                 int activityId = rowdic[rownumber];
                 Activities activity = _dataAccess.GetUserActivitiesById(activityId);
 
@@ -403,7 +452,7 @@ namespace Rememberall
             Writeline("Which activity do you want to delete? Choose from above");
             try
             {
-                int rownumber = int.Parse(Console.ReadLine()); 
+                int rownumber = int.Parse(Console.ReadLine());
                 int activityId = rowdic[rownumber];
                 // int activityId = int.Parse(Console.ReadLine());
                 Activities deleteActivity = _dataAccess.GetUserActivitiesById(activityId);
@@ -449,7 +498,7 @@ namespace Rememberall
             Console.WriteLine();
             Console.WriteLine("Press ESC to go back");
             ConsoleKey command = Console.ReadKey(true).Key;
-            if (command == ConsoleKey.Escape )
+            if (command == ConsoleKey.Escape)
             {
                 MainMenu();
             }
@@ -471,9 +520,9 @@ namespace Rememberall
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
 
                 rowdic.Add(rownumber, item.Id);
-               
+
                 //Console.WriteLine($"{rownumber.ToString().PadRight(10)}{item.Activityname.PadRight(40)}{item.Date}");
-                Console.WriteLine(rownumber.ToString().PadRight(5) + item.Activityname.PadRight(30) + item.Date.DayOfWeek.ToString().PadRight(8) + item.Date.Day.ToString() + "/" + item.Date.Month.ToString().PadRight(10) + item.Date.Hour.ToString() + ":" + item.Date.Minute.ToString() );
+                Console.WriteLine(rownumber.ToString().PadRight(5) + item.Activityname.PadRight(30) + item.Date.DayOfWeek.ToString().PadRight(8) + item.Date.Day.ToString() + "/" + item.Date.Month.ToString().PadRight(10) + item.Date.Hour.ToString() + ":" + item.Date.Minute.ToString());
                 rownumber++;
             }
             Console.WriteLine();
@@ -500,15 +549,28 @@ namespace Rememberall
             if (reggedpass == false)
             {
                 SetHiddenPass();
-                
+
             }
-           
-            
-                return input.ToString();
-                
-            
-            
+
+            return input.ToString();
         }
+
+        public string SetHiddenPassLogin()
+        {
+            Write("Please enter password:");
+            StringBuilder input = new StringBuilder();
+            while (true)
+            {
+                var key = Console.ReadKey(true);
+                if (key.Key == ConsoleKey.Enter) break;
+                if (key.Key == ConsoleKey.Backspace && input.Length > 0) input.Remove(input.Length - 1, 1);
+                else if (key.Key != ConsoleKey.Backspace) input.Append(key.KeyChar);
+                Console.Write("*");
+            }
+            return input.ToString();
+        }
+
+
 
         private bool RegexPass(StringBuilder input)
         {
@@ -519,7 +581,6 @@ namespace Rememberall
             {
                 throw new Exception("Password should not be empty");
             }
-
             var hasNumber = new Regex(@"[0-9]+");
             var hasUpperChar = new Regex(@"[A-Z]+");
             var hasMiniMaxChars = new Regex(@".{8,8}");
@@ -530,29 +591,29 @@ namespace Rememberall
             {
                 ErrorMessage = "  - Password should contain At least one lower case letter";
                 Console.WriteLine(ErrorMessage);
-                
+
                 return false;
-                
+
             }
             else if (!hasUpperChar.IsMatch(password))
             {
                 ErrorMessage = "  - Password should contain At least one upper case letter";
                 Console.WriteLine(ErrorMessage);
-                
+
                 return false;
             }
             else if (!hasMiniMaxChars.IsMatch(password))
             {
                 ErrorMessage = "  - Password should not be less than or greater than 8 characters";
                 Console.WriteLine(ErrorMessage);
-                
+
                 return false;
             }
             else if (!hasNumber.IsMatch(password))
             {
                 ErrorMessage = "  - Password should contain At least one numeric value";
                 Console.WriteLine(ErrorMessage);
-                
+
                 return false;
             }
 
@@ -560,7 +621,7 @@ namespace Rememberall
             {
                 ErrorMessage = "  - Password should contain At least one special case characters";
                 Console.WriteLine(ErrorMessage);
-                
+
                 return false;
             }
             else
@@ -584,7 +645,7 @@ namespace Rememberall
         public void Header(string v)
         {
             Console.Clear();
-            Console.ForegroundColor = ConsoleColor.DarkRed; 
+            Console.ForegroundColor = ConsoleColor.DarkRed;
 
             Console.WriteLine(@"
 ██▀███  ▓█████  ███▄ ▄███▓▓█████  ███▄ ▄███▓ ▄▄▄▄   ▓█████  ██▀███   ▄▄▄       ██▓     ██▓    
@@ -596,15 +657,15 @@ namespace Rememberall
   ░▒ ░ ▒░ ░ ░  ░░  ░      ░ ░ ░  ░░  ░      ░▒░▒   ░  ░ ░  ░  ░▒ ░ ▒░  ▒   ▒▒ ░░ ░ ▒  ░░ ░ ▒  ░
   ░░   ░    ░   ░      ░      ░   ░      ░    ░    ░    ░     ░░   ░   ░   ▒     ░ ░     ░ ░   
    ░        ░  ░       ░      ░  ░       ░    ░         ░  ░   ░           ░  ░    ░  ░    ░  ░
-                                                   ░                                           "); // TODO: Skapa en metod med denna logga som ni kallar 
-                                                                                                   // på istället för att klistra in den på flera ställen.
+                                                   ░                                           "); 
+                                                                                                   
 
 
 
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine();
             Console.WriteLine(v.ToUpper());
-            
+
             Console.WriteLine();
         }
 
@@ -617,9 +678,9 @@ namespace Rememberall
 
         private void Write(string v)
         {
-            
+
             Console.ForegroundColor = ConsoleColor.White;
-            Console.Write(v);      
+            Console.Write(v);
 
         }
 
@@ -633,7 +694,7 @@ namespace Rememberall
             Console.WriteLine("╔══════════════════════════════════════════════════════════════════════════════════════════════╗");
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine(titleContent);
-           
+
             if (!string.IsNullOrEmpty(subtitle))
             {
                 Console.WriteLine(subtitleContent);
@@ -708,7 +769,7 @@ namespace Rememberall
         // help
         private static void DisplayUsage()
         {
-            Console.WriteLine("Console Calendar (c) Copyright 2002 Michael Eaton");
+            Console.WriteLine("Console Calendar");
             Console.WriteLine("usage: calendar <year> <month>");
             Console.WriteLine();
             Console.WriteLine("Year must be a 4-digit year.");
@@ -718,9 +779,9 @@ namespace Rememberall
         private static void DisplayCalendar(int v)
         {
             int CurrentYear = DateTime.Today.Year;
-            int CurrentMonth = DateTime.Today.Month +v; //  int v + v-------------------Ändra här för att ändra månad +1= februari, +2=mars etc.
+            int CurrentMonth = DateTime.Today.Month + v; //  int v + v-------------------Ändra här för att ändra månad +1= februari, +2=mars etc.
             int CurrentDay = DateTime.Today.Day;
-            
+
             DisplayCalendar(CurrentYear, CurrentMonth, CurrentDay);
         }
 
@@ -731,23 +792,23 @@ namespace Rememberall
 
         private static void DisplayCalendar(int TheYear, int TheMonth, int TheDay)
         {
-            
+
             Int16 FirstDayOfMonth = 1;
             Int32 NumberOfDaysInMonth = DateTime.DaysInMonth(TheYear, TheMonth);
             DateTime FullDateToUse = new DateTime(TheYear, TheMonth, FirstDayOfMonth);
-            
+
             Int32 StartDay = Convert.ToInt32(FullDateToUse.DayOfWeek);
 
             Int32 NumberOfTabs = StartDay;
-           
+
             DisplayHeader(GetMonthName(TheMonth), TheYear.ToString(), true);
-            
+
             //-------------------------------------------------
             int DayOfWeek = StartDay;
-            for (int Counter = 2; Counter <= NumberOfDaysInMonth; Counter++)// Ändrade till 2 ist för 1
+            for (int Counter = 2; Counter <= NumberOfDaysInMonth; Counter++)
             {
                 string DayString = "";
-             
+
                 if (Counter == 2) // 
                 {
                     String Padding = new String('\t', NumberOfTabs);
@@ -759,11 +820,11 @@ namespace Rememberall
                 }
 
                 // highlight todays date (using *) ------------------- Lägga till aktivitet
-                if (TheDay != 1 && Counter == TheDay && TheMonth ==1)
+                if (TheDay != 1 && Counter == TheDay && TheMonth == 1)
                 {
                     DayString = String.Concat("*", DayString);
                 }
-             
+
                 if (DayOfWeek % 7 == 0 && Counter > 1)
                 {
                     DayString = String.Concat("\n", Counter.ToString());
@@ -773,13 +834,13 @@ namespace Rememberall
 
                 DayOfWeek++;
             }
-           
+
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine();
         }
         // ÄNDRA HÄR---------------------------------------------------
-        
+
         private static void DisplayHeader(string theMonthName, string theYear, bool ShowCurrentDate)
         {
             string Header = String.Concat(theMonthName, ", ");
@@ -840,5 +901,5 @@ namespace Rememberall
             }
         }
     }
-    
-    }
+
+}

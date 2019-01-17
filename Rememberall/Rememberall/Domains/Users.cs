@@ -6,6 +6,7 @@ namespace Rememberall.Domains
 {
     public class Users
     {
+        public static string ResettedUser { get; set; }
         public static int? CurrentUserId { get; set; }
 
         public int Id { get; set; }

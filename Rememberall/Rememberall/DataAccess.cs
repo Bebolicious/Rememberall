@@ -72,6 +72,65 @@ namespace Rememberall
             }
         }
 
+        public static bool ResetPassword(string Inputtedusername)
+        {
+
+            var sql = @"
+                         Select Username, Password
+                         FROM Users
+                    WHERE Username=@Username";
+
+
+            using (SqlConnection connection = new SqlConnection(conString))
+            using (SqlCommand command = new SqlCommand(sql, connection))
+            {
+                connection.Open();
+                command.Parameters.Add(new SqlParameter("Username", Inputtedusername));
+                command.ExecuteNonQuery();
+                SqlDataReader reader = command.ExecuteReader();
+
+
+                var Credentials = new Users();
+
+                while (reader.Read())
+                {
+                    string Username = reader.GetSqlString(0).Value;
+
+                    if (Username == Inputtedusername)
+                    {
+                        Credentials.Username = Username;
+                        Users.ResettedUser = Username;
+                        return true;
+
+
+                    }
+
+                }
+                return false;
+
+            }
+        }
+
+        internal void ResetUsersPassword(string Password)
+        {
+            var resetteduser = Users.ResettedUser;
+            var sql = @"Update Users
+                        SET Password = @Password
+                            Where Username = @Username";
+
+            using (SqlConnection connection = new SqlConnection(conString))
+            using (SqlCommand command = new SqlCommand(sql, connection))
+            {
+                connection.Open();
+                command.Parameters.Add(new SqlParameter("Password", Password));
+                command.Parameters.Add(new SqlParameter("Username", resetteduser));
+
+
+
+                command.ExecuteNonQuery();
+            }
+        }
+
         public static Users GetCurrentUserById(int? Id)
         {
 
