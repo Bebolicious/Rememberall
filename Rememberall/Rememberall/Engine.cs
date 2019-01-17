@@ -337,11 +337,33 @@ namespace Rememberall
             }
             if (command == ConsoleKey.B)
             {
+                EditUserActivities();
+            }
+
+            if (command == ConsoleKey.C)
+            {
+                DeleteActivityFromActivities();
+            }
+            if (command == ConsoleKey.D)
+            {
+                MainMenu();
+            }
+        }
+
+        private void EditUserActivities()
+        {
+            int TempId = Users.CurrentUserId.Value;
+            var rowdic = ShowUserActivity();
+
+            var Cu = DataAccess.GetCurrentUserById(TempId);
+
+            try
+            {
                 Header($"{Cu.Username}'s Activities");
                 ShowUserActivity(); //Snyggt att man ser sina aktiviteter direkt :)
                 Console.WriteLine("Which activity do you want do edit? Choose from above");
 
-                int rownumber = int.Parse(Console.ReadLine()); //TODO Validera genom en tryParse eller try/catch :)
+                int rownumber = int.Parse(Console.ReadLine()); 
                 int activityId = rowdic[rownumber];
                 Activities activity = _dataAccess.GetUserActivitiesById(activityId);
 
@@ -355,17 +377,35 @@ namespace Rememberall
                 _dataAccess.UpdateActivityName(activity);
                 _dataAccess.UpdateActivityDate(activity);
                 ManageActivities();
+            }
+            catch (Exception)
+            {
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Choose by entering the number for the activity you want to edit");
+                Thread.Sleep(2000);
+                Console.ResetColor();
+                EditUserActivities();
 
             }
+        }
 
-            if (command == ConsoleKey.C)
+        private void DeleteActivityFromActivities()
+        {
+            int TempId = Users.CurrentUserId.Value;
+
+            var Cu = DataAccess.GetCurrentUserById(TempId);
+            var rowdic = ShowUserActivity();
+
+
+            Header($"{Cu.Username}'s Activities");
+            ShowUserActivity();
+            Writeline("Which activity do you want to delete? Choose from above");
+            try
             {
-                Header($"{Cu.Username}'s Activities");
-                ShowUserActivity();
-                Writeline("Which activity do you want to delete? Choose from above");
-                int rownumber = int.Parse(Console.ReadLine()); //Validera genom tryParse eller try/catch i en while-loop etc :)
+                int rownumber = int.Parse(Console.ReadLine()); 
                 int activityId = rowdic[rownumber];
-               // int activityId = int.Parse(Console.ReadLine());
+                // int activityId = int.Parse(Console.ReadLine());
                 Activities deleteActivity = _dataAccess.GetUserActivitiesById(activityId);
                 _dataAccess.DeleteActivity(deleteActivity);
                 Console.WriteLine();
@@ -376,9 +416,14 @@ namespace Rememberall
                 ManageActivities();
 
             }
-            if (command == ConsoleKey.D)
+            catch (Exception)
             {
-                MainMenu();
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Choose by entering the number for the activity you want to delete");
+                Thread.Sleep(2000);
+                Console.ResetColor();
+                DeleteActivityFromActivities();
             }
         }
 
