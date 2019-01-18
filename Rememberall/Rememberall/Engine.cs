@@ -14,6 +14,7 @@ namespace Rememberall
 {
     class Engine
     {
+        
         DataAccess _dataAccess = new DataAccess();
         internal void Run()
         {
@@ -45,7 +46,7 @@ namespace Rememberall
             }
         }
         
-        public int wrongpass = 0;
+
         private void Login()
         {
             Header("Log In\nPress 'Enter' Twice to go back.");
@@ -70,7 +71,7 @@ namespace Rememberall
             else
             {
                 
-                if (wrongpass == 2)
+                if (Users.ResettedUserint == 2)
                 {
                     Header("Password reset");
                     Writeline("You have entered a wrong password too many times, do you want to reset your password?");
@@ -85,16 +86,20 @@ namespace Rememberall
                         Login();
                     else
                     {
+                        Users.ResettedUserint = 0;
                         Login();
                     }
-
+                    
                 }
-                wrongpass++;
+                
                 Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine();
                 Console.WriteLine("Wrong Username or Password, try again.");
                 Console.ForegroundColor = ConsoleColor.White;
-                Console.ReadKey();
+                Thread.Sleep(1500);
+                Users.ResettedUserint++;
                 Login();
+
                 
             }
         }
@@ -113,10 +118,11 @@ namespace Rememberall
                 string resettedpass = SetHiddenPass();
 
                 _dataAccess.ResetUsersPassword(resettedpass);
-                Writeline("Password reset complete");
+                Writeline(" - Password reset complete");
                 Thread.Sleep(400);
+                Users.ResettedUserint = 0;
                 Login();
-                wrongpass = wrongpass - wrongpass;
+               
             }
             else
             {
@@ -136,6 +142,14 @@ namespace Rememberall
                 Write("Please choose a username:");
                 string Newuser = Console.ReadLine();
                 Header("Create new account");
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.WriteLine("\t\t\t\t\t\tInstructions:");
+                Console.WriteLine("\t\t\t\t\t\t- Password has to be atleast 8 characters long,");
+                Console.WriteLine("\t\t\t\t\t\t- Contain atleast one upper and lower case letter,");
+                Console.WriteLine("\t\t\t\t\t\t- Contain atleast one number and one special character.");
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.White;
                 string input = SetHiddenPass();
 
                 string Newpassword = HashPass(input); 
@@ -562,6 +576,7 @@ namespace Rememberall
             while (true)
             {
                 var key = Console.ReadKey(true);
+
                 if (key.Key == ConsoleKey.Enter) break;
                 if (key.Key == ConsoleKey.Backspace && input.Length > 0) input.Remove(input.Length - 1, 1);
                 else if (key.Key != ConsoleKey.Backspace) input.Append(key.KeyChar);

@@ -115,7 +115,7 @@ namespace Rememberall
         {
             var resetteduser = Users.ResettedUser;
             var sql = @"Update Users
-                        SET Password = @Password
+                        SET Password=@Password
                             Where Username = @Username";
 
             using (SqlConnection connection = new SqlConnection(conString))
