@@ -536,7 +536,7 @@ namespace Rememberall
                 rowdic.Add(rownumber, item.Id);
 
                 //Console.WriteLine($"{rownumber.ToString().PadRight(10)}{item.Activityname.PadRight(40)}{item.Date}");
-                Console.WriteLine(rownumber.ToString().PadRight(5) + item.Activityname.PadRight(30) + item.Date.DayOfWeek.ToString().PadRight(8) + item.Date.Day.ToString() + "/" + item.Date.Month.ToString().PadRight(10) + item.Date.Hour.ToString() + ":" + item.Date.Minute.ToString());
+                Console.WriteLine(rownumber.ToString().PadRight(5) + item.Activityname.PadRight(30) + item.Date.DayOfWeek.ToString().PadRight(10) + item.Date.Day.ToString() + "/" + item.Date.Month.ToString().PadRight(15) + item.Date.ToString("HH:mm"));
                 rownumber++;
             }
             Console.WriteLine();
