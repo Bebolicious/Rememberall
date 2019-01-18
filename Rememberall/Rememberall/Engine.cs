@@ -14,7 +14,7 @@ namespace Rememberall
 {
     class Engine
     {
-        
+
         DataAccess _dataAccess = new DataAccess();
         internal void Run()
         {
@@ -45,7 +45,7 @@ namespace Rememberall
                 LoginScreen();
             }
         }
-        
+
 
         private void Login()
         {
@@ -58,7 +58,7 @@ namespace Rememberall
             {
                 LoginScreen();
             }
-            
+
             string Hashpass = HashPass(pass);
             bool Username = DataAccess.MatchUsername(username, Hashpass);
 
@@ -70,7 +70,7 @@ namespace Rememberall
             }
             else
             {
-                
+
                 if (Users.ResettedUserint == 2)
                 {
                     Header("Password reset");
@@ -83,15 +83,18 @@ namespace Rememberall
                         PasswordReset();
 
                     if (command == ConsoleKey.B)
+                    {
+                        Users.ResettedUserint = 0;
                         Login();
+                    }
                     else
                     {
                         Users.ResettedUserint = 0;
                         Login();
                     }
-                    
+
                 }
-                
+
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine();
                 Console.WriteLine("Wrong Username or Password, try again.");
@@ -100,7 +103,7 @@ namespace Rememberall
                 Users.ResettedUserint++;
                 Login();
 
-                
+
             }
         }
 
@@ -114,15 +117,17 @@ namespace Rememberall
             bool Username = DataAccess.ResetPassword(username);
             if (Username == true)
             {
-                
+
                 string resettedpass = SetHiddenPass();
 
-                _dataAccess.ResetUsersPassword(resettedpass);
+                string finalpass = HashPass(resettedpass);
+
+                _dataAccess.ResetUsersPassword(finalpass);
                 Writeline(" - Password reset complete");
                 Thread.Sleep(400);
                 Users.ResettedUserint = 0;
                 Login();
-               
+
             }
             else
             {
@@ -130,7 +135,7 @@ namespace Rememberall
                 Thread.Sleep(500);
                 Login();
             }
-           
+
 
         }
 
@@ -152,9 +157,9 @@ namespace Rememberall
                 Console.ForegroundColor = ConsoleColor.White;
                 string input = SetHiddenPass();
 
-                string Newpassword = HashPass(input); 
+                string Newpassword = HashPass(input);
 
-                _dataAccess.CreateNewUser(Newuser, Newpassword); 
+                _dataAccess.CreateNewUser(Newuser, Newpassword);
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("User has been created");
                 Console.ForegroundColor = ConsoleColor.White;
@@ -282,19 +287,27 @@ namespace Rememberall
             }
             else
             {
-                alarmname = "Alarm"; 
+                alarmname = "Alarm";
             }
             Header("Set new alarm");
-            Console.ForegroundColor = ConsoleColor.White;       //TODO att skapa en metod som kontrollerar att datum är i rätt format 
+            Console.ForegroundColor = ConsoleColor.White;
             Console.Write("Set date: ");
-            DateTime alarmdate = DateTime.Parse(Console.ReadLine()); //Här kan man kanske validera bättre för att undvika krasch, tex tryPArse.
-                                                                     // nu går det att skriva in årtal som redan varit också
-                                                                     //Ni kan ju kanske gör en metod som kontrollerar så datum är i rätt format
-                                                                     // 
-            Write("Set time for the alarm: ");
-            string time = Console.ReadLine();
-            int TempId = Users.CurrentUserId.Value;
-            DataAccess.SetAlarmDate(alarmdate, alarmname, time, TempId);
+            try
+            {
+                DateTime alarmdate = DateTime.Parse(Console.ReadLine());
+                Write("Set time for the alarm: ");
+                string time = Console.ReadLine();
+                int TempId = Users.CurrentUserId.Value;
+                DataAccess.SetAlarmDate(alarmdate, alarmname, time, TempId);
+            }
+            catch (Exception)
+            {
+                Header("Fel format");
+                Console.WriteLine();
+                ErrorMessage("Fel format för alarmet, ange format i HH/MM");
+                Thread.Sleep(1000);
+                SetNewAlarm();
+            }
         }
 
 
@@ -672,8 +685,8 @@ namespace Rememberall
   ░▒ ░ ▒░ ░ ░  ░░  ░      ░ ░ ░  ░░  ░      ░▒░▒   ░  ░ ░  ░  ░▒ ░ ▒░  ▒   ▒▒ ░░ ░ ▒  ░░ ░ ▒  ░
   ░░   ░    ░   ░      ░      ░   ░      ░    ░    ░    ░     ░░   ░   ░   ▒     ░ ░     ░ ░   
    ░        ░  ░       ░      ░  ░       ░    ░         ░  ░   ░           ░  ░    ░  ░    ░  ░
-                                                   ░                                           "); 
-                                                                                                   
+                                                   ░                                           ");
+
 
 
 
