@@ -12,6 +12,8 @@ namespace Rememberall
             Users.CurrentUserId = null;
             Users.ResettedUserint = 0;
             var engine = new Engine();
+            var loader = new Loader();
+            Loader.Run();
             engine.Run();
 
             
